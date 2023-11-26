@@ -1,40 +1,28 @@
 package com.senelium.config;
 
+import com.senelium.driver.factory.manager.FactoryManager;
+import com.senelium.driver.factory.manager.SeneFactoryManager;
 import lombok.Getter;
 import lombok.Setter;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 @Setter
 @Getter
 public class SeneConfiguration {
-    Capabilities capabilities;
-    Browser browser;
-    String remoteURL;
-    boolean headless;
 
-    public SeneConfiguration(Capabilities capabilities, Browser browser, String remoteURL, boolean headless) {
-        this.capabilities = capabilities;
-        this.browser = browser;
-        this.remoteURL = remoteURL;
-        this.headless = headless;
+    DriverConfig driverConfig;
+    FactoryManager factoryManager;
+
+    public SeneConfiguration(DriverConfig driverConfig, FactoryManager factoryManager) {
+        this.driverConfig = driverConfig;
+        this.factoryManager = factoryManager;
+    }
+
+    public SeneConfiguration(DriverConfig driverConfig) {
+        this.driverConfig = driverConfig;
+        this.factoryManager = new SeneFactoryManager();
     }
 
     public SeneConfiguration() {
-        this.browser = Browser.CHROME;
-        this.capabilities = new ChromeOptions();
-        this.remoteURL = "";
-        this.headless = false;
-    }
-
-    public URL getRemoteAddress() {
-        try {
-            return new URL(this.remoteURL);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        this(new DriverConfig(), new SeneFactoryManager());
     }
 }
