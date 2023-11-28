@@ -2,45 +2,35 @@ package com.senelium.element;
 
 import com.senelium.Senelium;
 import lombok.Getter;
-import lombok.Setter;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
 @Getter
-@Setter
 public class Element {
-    protected WebDriver driver;
-    protected WebElement webElement;
-    protected By locator;
+    By locator;
 
     public Element(By locator) {
         this.locator = locator;
-        this.driver = Senelium.getWebDriver();
     }
 
     public WebElement findElement() {
-        if (webElement == null || isStale()) {
-            return findVisibleElement();
-        }
-        return webElement;
+        return getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    private WebElement findVisibleElement() {
+    public WebElement findVisibleElement() {
         return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public boolean isStale() {
-        return ExpectedConditions.stalenessOf(webElement).apply(driver);
+    public List<WebElement> findElements() {
+        return getWaiter().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 
-    public List<WebElement> findElements() {
-        return driver.findElements(locator);
+    public List<WebElement> findVisibleElements() {
+        return getWaiter().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
     public boolean isDisplayed() {
@@ -61,12 +51,32 @@ public class Element {
 
     public String getText() {
         if (isTag("input")) {
-            return findElement().getAttribute("value");
+            return getAttribute("value");
         }
         return findElement().getText();
     }
 
+    public String getAttribute(String name) {
+        return findElement().getAttribute(name);
+    }
+
+    public String getProperty(String name) {
+        return findElement().getDomProperty(name);
+    }
+
+    public boolean isEnabled() {
+        return findElement().isEnabled();
+    }
+
+    public boolean isSelected() {
+        return findElement().isSelected();
+    }
+
+    public void waitUntilNotDisplayed() {
+        getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
     private WebDriverWait getWaiter() {
-        return Senelium.getWaiter();
+        return Senelium.getSeneDriver().getDefaultWaiter();
     }
 }

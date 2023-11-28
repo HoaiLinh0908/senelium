@@ -1,5 +1,5 @@
 package com.senelium.config;
 
-public enum Browser {
+public enum Browser implements IBrowser {
     CHROME, FIREFOX, EDGE
 }

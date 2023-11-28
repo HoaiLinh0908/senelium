@@ -4,7 +4,6 @@ import com.senelium.config.SeneConfiguration;
 import com.senelium.driver.SeneDriver;
 import com.senelium.driver.factory.DriverFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -16,26 +15,26 @@ public final class Senelium {
     private Senelium() {
     }
 
-    public static void createWebDriver(SeneConfiguration config) {
+    public static void createDriver(SeneConfiguration config) {
         DriverFactory factory = config.getFactoryManager().findFactory(config.getDriverConfig().getBrowser());
         threadWebDriver.set(factory.createDriver(config.getDriverConfig()));
     }
 
-    public static WebDriver getWebDriver() {
+    public static SeneDriver getSeneDriver() {
         if (threadWebDriver.get() == null) {
             throw new RuntimeException("Driver not found. Please create a driver first.");
         }
-        return threadWebDriver.get().getDriver();
+        return threadWebDriver.get();
     }
 
     public static void navigate(String url) {
         log.info("Navigate to {}", url);
-        getWebDriver().navigate().to(url);
+        getSeneDriver().getDriver().navigate().to(url);
     }
 
     public static void quit() {
         log.info("Quit the driver");
-        getWebDriver().quit();
+        getSeneDriver().getDriver().quit();
     }
 
     public static void sleep(Duration mil) {
@@ -44,10 +43,6 @@ public final class Senelium {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public static WebDriverWait getWaiter() {
-        return new WebDriverWait(getWebDriver(), Duration.ofSeconds(5));
     }
 
     //TODO: Implement other methods

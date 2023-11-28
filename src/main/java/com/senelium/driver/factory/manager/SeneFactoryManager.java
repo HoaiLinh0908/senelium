@@ -14,7 +14,7 @@ import java.util.Map;
 public class SeneFactoryManager implements FactoryManager {
 
     @Override
-    public Map<Browser, Class<? extends DriverFactory>> availableFactories() {
+    public Map<Browser, Class<? extends DriverFactory>> initializeFactories() {
         Map<Browser, Class<? extends DriverFactory>> factories = new HashMap<>();
 
         factories.put(Browser.CHROME, ChromeDriverFactory.class);

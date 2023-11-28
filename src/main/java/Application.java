@@ -37,7 +37,7 @@ public class Application {
         DriverConfig driverConfig = new DriverConfig(chrome, Browser.CHROME, "", false, Timeout.getDefault());
         SeneConfiguration configuration = new SeneConfiguration(driverConfig);
 
-        Senelium.createWebDriver(configuration);
+        Senelium.createDriver(configuration);
         Senelium.navigate("https://www.google.com");
         Element search = new Element(By.cssSelector("textarea[type='search']"));
         search.type("Christmas");

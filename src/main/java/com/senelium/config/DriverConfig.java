@@ -12,12 +12,12 @@ import java.net.URL;
 @Setter
 public class DriverConfig {
     Capabilities capabilities;
-    Browser browser;
+    IBrowser browser;
     String remoteURL;
     boolean headless;
     Timeout timeout;
 
-    public DriverConfig(Capabilities capabilities, Browser browser, String remoteURL, boolean headless, Timeout timeout) {
+    public DriverConfig(Capabilities capabilities, IBrowser browser, String remoteURL, boolean headless, Timeout timeout) {
         this.capabilities = capabilities;
         this.browser = browser;
         this.remoteURL = remoteURL;
