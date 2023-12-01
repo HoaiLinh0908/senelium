@@ -1,7 +1,7 @@
 package com.senelium.config;
 
-import com.senelium.driver.factory.manager.FactoryManager;
-import com.senelium.driver.factory.manager.SeneFactoryManager;
+import com.senelium.driver.factory.ChromeDriverFactory;
+import com.senelium.driver.factory.DriverFactory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,19 +10,19 @@ import lombok.Setter;
 public class SeneConfiguration {
 
     DriverConfig driverConfig;
-    FactoryManager factoryManager;
+    DriverFactory driverFactory;
 
-    public SeneConfiguration(DriverConfig driverConfig, FactoryManager factoryManager) {
+    public SeneConfiguration(DriverConfig driverConfig, DriverFactory driverFactory) {
         this.driverConfig = driverConfig;
-        this.factoryManager = factoryManager;
+        this.driverFactory = driverFactory;
     }
 
     public SeneConfiguration(DriverConfig driverConfig) {
         this.driverConfig = driverConfig;
-        this.factoryManager = new SeneFactoryManager();
+        this.driverFactory = new ChromeDriverFactory();
     }
 
     public SeneConfiguration() {
-        this(new DriverConfig(), new SeneFactoryManager());
+        this(new DriverConfig(), new ChromeDriverFactory());
     }
 }

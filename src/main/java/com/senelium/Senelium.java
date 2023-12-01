@@ -9,14 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 @Slf4j
-public final class Senelium {
+public class Senelium {
     private static final ThreadLocal<SeneDriver> threadWebDriver = new ThreadLocal<>();
 
     private Senelium() {
     }
 
     public static void createDriver(SeneConfiguration config) {
-        DriverFactory factory = config.getFactoryManager().findFactory(config.getDriverConfig().getBrowser());
+        DriverFactory factory = config.getDriverFactory();
         threadWebDriver.set(factory.createDriver(config.getDriverConfig()));
     }
 

@@ -1,8 +1,9 @@
 import com.senelium.Senelium;
-import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
 import com.senelium.config.SeneConfiguration;
 import com.senelium.config.Timeout;
+import com.senelium.driver.factory.ChromeDriverFactory;
+import com.senelium.driver.factory.DriverFactory;
 import com.senelium.element.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -34,8 +35,9 @@ public class Application {
         EdgeOptions edge = new EdgeOptions();
 
 
-        DriverConfig driverConfig = new DriverConfig(chrome, Browser.CHROME, "", false, Timeout.getDefault());
-        SeneConfiguration configuration = new SeneConfiguration(driverConfig);
+        DriverConfig driverConfig = new DriverConfig(chrome, "", false, Timeout.getDefault());
+        DriverFactory factory = new ChromeDriverFactory();
+        SeneConfiguration configuration = new SeneConfiguration(driverConfig, factory);
 
         Senelium.createDriver(configuration);
         Senelium.navigate("https://www.google.com");
