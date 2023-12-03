@@ -4,7 +4,6 @@ import com.senelium.config.SeneConfiguration;
 import com.senelium.driver.SeneDriver;
 import com.senelium.driver.factory.DriverFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
@@ -32,9 +31,10 @@ public class Senelium {
         getSeneDriver().getDriver().navigate().to(url);
     }
 
-    public static void quit() {
+    public static void closeBrowser() {
         log.info("Quit the driver");
         getSeneDriver().getDriver().quit();
+        threadWebDriver.remove();
     }
 
     public static void sleep(Duration mil) {
