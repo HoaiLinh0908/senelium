@@ -1,4 +1,5 @@
-import com.senelium.Senelium;
+package com.senelium;
+
 import com.senelium.config.DriverConfig;
 import com.senelium.config.SeneConfiguration;
 import com.senelium.config.Timeout;
