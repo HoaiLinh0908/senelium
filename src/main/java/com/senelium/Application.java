@@ -34,7 +34,7 @@ public class Application {
         firefox.setCapability("gpu", false);
 
         //Edge
-        EdgeOptions edge = new EdgeOptions();
+        //EdgeOptions edge = new EdgeOptions();
 
         //Chrome config
         DriverConfig driverConfig = new DriverConfig(chrome, "", false, Timeout.getDefault());
