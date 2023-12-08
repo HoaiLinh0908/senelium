@@ -1,7 +1,6 @@
 package com.senelium.driver.factory;
 
 import com.senelium.config.DriverConfig;
-import com.senelium.config.SeneConfiguration;
 import com.senelium.driver.SeneDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.lang3.StringUtils;

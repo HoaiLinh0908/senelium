@@ -1,6 +1,6 @@
 package com.senelium;
 
-import com.senelium.config.SeneConfiguration;
+import com.senelium.config.DriverConfig;
 import com.senelium.driver.SeneDriver;
 import com.senelium.driver.factory.DriverFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,8 @@ public class Senelium {
     private Senelium() {
     }
 
-    public static void createDriver(SeneConfiguration config) {
-        DriverFactory factory = config.getDriverFactory();
-        threadWebDriver.set(factory.createDriver(config.getDriverConfig()));
+    public static void createDriver(DriverConfig config, DriverFactory factory) {
+        threadWebDriver.set(factory.createDriver(config));
     }
 
     public static SeneDriver getSeneDriver() {
@@ -26,9 +25,9 @@ public class Senelium {
         return threadWebDriver.get();
     }
 
-    public static void navigate(String url) {
+    public static void open(String url) {
         log.info("Navigate to {}", url);
-        getSeneDriver().getDriver().navigate().to(url);
+        getSeneDriver().getDriver().get(url);
     }
 
     public static void closeBrowser() {
@@ -43,6 +42,11 @@ public class Senelium {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void refresh() {
+        log.info("Refresh the page");
+        getSeneDriver().getDriver().navigate().refresh();
     }
 
     //TODO: Implement other methods

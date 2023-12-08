@@ -1,7 +1,6 @@
 package com.senelium;
 
 import com.senelium.config.DriverConfig;
-import com.senelium.config.SeneConfiguration;
 import com.senelium.config.Timeout;
 import com.senelium.driver.factory.ChromeDriverFactory;
 import com.senelium.driver.factory.DriverFactory;
@@ -9,7 +8,6 @@ import com.senelium.driver.factory.FirefoxDriverFactory;
 import com.senelium.element.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -33,21 +31,16 @@ public class Application {
         FirefoxOptions firefox = new FirefoxOptions();
         firefox.setCapability("gpu", false);
 
-        //Edge
-        //EdgeOptions edge = new EdgeOptions();
-
         //Chrome config
-        DriverConfig driverConfig = new DriverConfig(chrome, "", false, Timeout.getDefault());
-        DriverFactory factory = new ChromeDriverFactory();
-        SeneConfiguration configuration = new SeneConfiguration(driverConfig, factory);
+        DriverConfig chromeDriverConfig = new DriverConfig(chrome, "", false, Timeout.getDefault());
+        DriverFactory chromeFactory = new ChromeDriverFactory();
 
         //Firefox config
         DriverConfig ffDriverConfig = new DriverConfig(firefox, "", false, Timeout.getDefault());
         DriverFactory ffFactory = new FirefoxDriverFactory();
-        SeneConfiguration firefoxConfig = new SeneConfiguration(ffDriverConfig, ffFactory);
 
-        Example example1 = new Example(configuration);
-        Example example2 = new Example(firefoxConfig);
+        Example example1 = new Example(chromeDriverConfig, chromeFactory);
+        Example example2 = new Example(ffDriverConfig, ffFactory);
 
         Thread thread1 = new Thread(example1);
         Thread thread2 = new Thread(example2);
@@ -58,16 +51,18 @@ public class Application {
 }
 
 class Example implements Runnable {
-    SeneConfiguration configuration;
+    DriverConfig configuration;
+    DriverFactory factory;
 
-    Example(SeneConfiguration configuration) {
+    Example(DriverConfig configuration, DriverFactory factory) {
         this.configuration = configuration;
+        this.factory = factory;
     }
 
     @Override
     public void run() {
-        Senelium.createDriver(configuration);
-        Senelium.navigate("https://www.google.com");
+        Senelium.createDriver(configuration, factory);
+        Senelium.open("https://www.google.com");
         Element search = new Element(By.cssSelector("textarea[type='search']"));
         search.type("Christmas");
         System.out.println(search.isTag("textarea"));
