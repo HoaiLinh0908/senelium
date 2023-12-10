@@ -8,6 +8,14 @@
     <artifactId>senelium3</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <distributionManagement>
+        <repository>
+            <id>sele3</id>
+            <name>Senelium 3</name>
+            <url>https://maven.pkg.github.com/hoailinh0908/sele3</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
