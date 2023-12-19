@@ -4,6 +4,9 @@ import com.senelium.config.DriverConfig;
 import com.senelium.driver.SeneDriver;
 import com.senelium.driver.factory.DriverFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
@@ -23,6 +26,18 @@ public class Senelium {
             throw new RuntimeException("Driver not found. Please create a driver first.");
         }
         return threadWebDriver.get();
+    }
+
+    public static WebDriver getDriver() {
+        return getSeneDriver().getDriver();
+    }
+
+    public static Actions getActions() {
+        return getSeneDriver().getActions();
+    }
+
+    public static WebDriverWait getDefaultWaiter() {
+        return getSeneDriver().getDefaultWaiter();
     }
 
     public static void open(String url) {

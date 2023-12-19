@@ -77,7 +77,7 @@ public class Element {
     }
 
     public void scrollToView() {
-        getActions().scrollToElement(findElement()).perform();
+        getActions().scrollToElement(findVisibleElement()).perform();
     }
 
     public void hover() {
