@@ -3,11 +3,9 @@ package com.senelium;
 import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
 import com.senelium.config.Timeout;
-import com.senelium.driver.factory.EdgeDriverFactory;
 import com.senelium.element.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -45,16 +43,6 @@ public class Application {
 
         thread1.start();
         thread2.start();
-
-        EdgeOptions edgeOptions = new EdgeOptions();
-        DriverConfig config = new DriverConfig(edgeOptions, "", false, Timeout.getDefault());
-        Senelium.createDriver(new EdgeDriverFactory(), config);
-        Senelium.open("https://www.google.com");
-        Element search = new Element(By.cssSelector("textarea[type='search']"));
-        search.type("Christmas");
-        System.out.println(search.isTag("textarea"));
-        Senelium.sleep(Duration.ofSeconds(3));
-        Senelium.closeBrowser();
     }
 }
 
