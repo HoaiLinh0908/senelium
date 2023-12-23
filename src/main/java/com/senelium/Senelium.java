@@ -1,8 +1,10 @@
 package com.senelium;
 
+import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
 import com.senelium.driver.SeneDriver;
 import com.senelium.driver.factory.DriverFactory;
+import com.senelium.driver.factory.manager.FactoryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -17,7 +19,13 @@ public class Senelium {
     private Senelium() {
     }
 
-    public static void createDriver(DriverConfig config, DriverFactory factory) {
+    public static void createDriver(Browser browser, DriverConfig config) {
+        FactoryManager factoryManager = new FactoryManager();
+        DriverFactory driverFactory = factoryManager.findFactory(browser);
+        threadWebDriver.set(driverFactory.createDriver(config));
+    }
+
+    public static void createDriver(DriverFactory factory, DriverConfig config) {
         threadWebDriver.set(factory.createDriver(config));
     }
 
