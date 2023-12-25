@@ -3,7 +3,6 @@ package com.senelium.config;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,7 +23,6 @@ public class DriverConfig {
     }
 
     public DriverConfig() {
-        this(new ChromeOptions(), "", false, Timeout.getDefault());
     }
 
     public URL getRemoteAddress() {
