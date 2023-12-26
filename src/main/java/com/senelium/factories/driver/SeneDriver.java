@@ -1,4 +1,4 @@
-package com.senelium.driver;
+package com.senelium.factories.driver;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;

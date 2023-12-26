@@ -1,9 +1,9 @@
-package com.senelium.driver.factory.manager;
+package com.senelium.factories.driver.manager;
 
 import com.senelium.config.Browser;
-import com.senelium.driver.factory.ChromeDriverFactory;
-import com.senelium.driver.factory.DriverFactory;
-import com.senelium.driver.factory.FirefoxDriverFactory;
+import com.senelium.factories.driver.ChromeDriverFactory;
+import com.senelium.factories.driver.DriverFactory;
+import com.senelium.factories.driver.FirefoxDriverFactory;
 
 import java.util.HashMap;
 import java.util.Map;

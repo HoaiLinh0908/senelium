@@ -2,9 +2,9 @@ package com.senelium;
 
 import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
-import com.senelium.driver.SeneDriver;
-import com.senelium.driver.factory.DriverFactory;
-import com.senelium.driver.factory.manager.FactoryManager;
+import com.senelium.factories.driver.SeneDriver;
+import com.senelium.factories.driver.DriverFactory;
+import com.senelium.factories.driver.manager.FactoryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;

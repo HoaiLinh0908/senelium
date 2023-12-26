@@ -1,8 +1,11 @@
 package com.senelium.config;
 
+import com.senelium.factories.capabilities.ChromeCapsFactory;
+import com.senelium.factories.capabilities.FirefoxCapsFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.edge.EdgeOptions;
 
 @Getter
 @Setter
@@ -24,7 +27,15 @@ public class TestConfig {
     }
 
     public Capabilities createCapabilities() {
-        //TODO: Create capabilities from from the browser property
-        return null;
+        switch (browser) {
+            case "chrome":
+                return new ChromeCapsFactory().createCapabilities();
+            case "firefox":
+                return new FirefoxCapsFactory().createCapabilities();
+            case "edge":
+                return new EdgeOptions();
+            default:
+                throw new RuntimeException("Browser " + browser + " is not supported!");
+        }
     }
 }

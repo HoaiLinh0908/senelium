@@ -1,7 +1,6 @@
-package com.senelium.driver.factory;
+package com.senelium.factories.driver;
 
 import com.senelium.config.DriverConfig;
-import com.senelium.driver.SeneDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

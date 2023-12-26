@@ -1,8 +1,8 @@
 package com.senelium.customfactory;
 
 import com.senelium.config.DriverConfig;
-import com.senelium.driver.SeneDriver;
-import com.senelium.driver.factory.DriverFactory;
+import com.senelium.factories.driver.SeneDriver;
+import com.senelium.factories.driver.DriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
