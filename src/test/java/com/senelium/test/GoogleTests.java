@@ -1,6 +1,7 @@
 package com.senelium.test;
 
 import com.senelium.Senelium;
+import com.senelium.assertion.TestAssert;
 import com.senelium.pages.GooglePage;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -16,16 +17,19 @@ public class GoogleTests extends TestBase {
     @BeforeClass(alwaysRun = true)
     void beforeClass() {
         Senelium.open("https://www.google.com");
+        googlePage.search("Christmas");
     }
 
     @Test(description = "Test Google")
     void googleTest() {
-        googlePage.search("Christmas");
+        TestAssert test = googlePage.isSearchBarContains("Christmas");
+        Assert.assertTrue(test.isPassed(), test.getErrors());
     }
 
     @Test(description = "Failed Test")
     void failedTest() {
-        Assert.assertTrue(!googlePage.isSearchBarDisplayed(), "This test failed");
+        TestAssert test = googlePage.isSearchBarContains("New year");
+        Assert.assertTrue(test.isPassed(), test.getErrors());
     }
 
     @Test(description = "Skipped Test")
@@ -33,9 +37,9 @@ public class GoogleTests extends TestBase {
         throw new SkipException("Skip this test!");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     void afterClass() {
-        Senelium.sleep(Duration.ofSeconds(2));
+        Senelium.sleep(Duration.ofSeconds(1));
         Senelium.closeBrowser();
     }
 }

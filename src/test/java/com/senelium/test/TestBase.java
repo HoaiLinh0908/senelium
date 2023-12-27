@@ -17,7 +17,6 @@ public class TestBase {
 
     @BeforeClass(alwaysRun = true)
     void initialTest() {
-
         TestConfig testConfig = TestConfig.getInstance();
 
         DriverConfig config1 = new DriverConfig();

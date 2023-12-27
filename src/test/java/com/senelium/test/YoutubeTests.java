@@ -15,11 +15,11 @@ public class YoutubeTests extends TestBase {
         Senelium.open("https://www.youtube.com");
     }
 
-    @Test
+    @Test(description = "Test Youtube")
     void youtubeTest() {
         Element search = new Element(By.cssSelector("input#search"));
         search.type("Christmas");
-        Senelium.sleep(Duration.ofSeconds(3));
+        Senelium.sleep(Duration.ofSeconds(1));
         Senelium.closeBrowser();
     }
 }

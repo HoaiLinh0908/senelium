@@ -3,6 +3,7 @@ package com.senelium.element;
 import com.senelium.Senelium;
 import lombok.Getter;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -49,12 +50,16 @@ public class Element {
         findElement().sendKeys(keys);
     }
 
+    public void pressEnter() {
+        getActions().sendKeys(Keys.ENTER);
+    }
+
     public boolean isTag(String tagName) {
         return findElement().getTagName().equalsIgnoreCase(tagName);
     }
 
     public String getText() {
-        if (isTag("input")) {
+        if (isTag("input") || isTag("textarea")) {
             return getAttribute("value");
         }
         return findElement().getText();
