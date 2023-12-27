@@ -2,15 +2,19 @@ package com.senelium;
 
 import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
-import com.senelium.factories.driver.SeneDriver;
 import com.senelium.factories.driver.DriverFactory;
+import com.senelium.factories.driver.SeneDriver;
 import com.senelium.factories.driver.manager.FactoryManager;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class Senelium {
@@ -37,8 +41,8 @@ public class Senelium {
         return threadWebDriver.get();
     }
 
-    public static WebDriver getDriver() {
-        return getSeneDriver().getDriver();
+    public static WebDriver getWebDriver() {
+        return getSeneDriver().getWebDriver();
     }
 
     public static Actions getActions() {
@@ -51,12 +55,12 @@ public class Senelium {
 
     public static void open(String url) {
         log.info("Navigate to {}", url);
-        getSeneDriver().getDriver().get(url);
+        getSeneDriver().getWebDriver().get(url);
     }
 
     public static void closeBrowser() {
         log.info("Quit the driver");
-        getSeneDriver().getDriver().quit();
+        getSeneDriver().getWebDriver().quit();
         threadWebDriver.remove();
     }
 
@@ -69,9 +73,30 @@ public class Senelium {
     }
 
     public static void refresh() {
-        log.info("Refresh the page");
-        getSeneDriver().getDriver().navigate().refresh();
+        getWebDriver().navigate().refresh();
     }
 
-    //TODO: Implement other methods
+    public static Cookie getCookie(String name) {
+        return getWebDriver().manage().getCookieNamed(name);
+    }
+
+    public static List<Cookie> getCookies() {
+        return new ArrayList<>(getWebDriver().manage().getCookies());
+    }
+
+    public static void addCookie(Cookie cookie) {
+        getWebDriver().manage().addCookie(cookie);
+    }
+
+    public static void clearCookie(String name) {
+        getWebDriver().manage().deleteCookieNamed(name);
+    }
+
+    public static void clearCookies() {
+        getWebDriver().manage().deleteAllCookies();
+    }
+
+    public static Alert getAlert() {
+        return getWebDriver().switchTo().alert();
+    }
 }

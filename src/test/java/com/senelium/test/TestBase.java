@@ -7,6 +7,7 @@ import com.senelium.config.TestConfig;
 import com.senelium.config.Timeout;
 import com.senelium.customfactory.EdgeDriverFactory;
 import com.senelium.listener.TestListener;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 
@@ -21,8 +22,8 @@ public class TestBase {
 
         DriverConfig config1 = new DriverConfig();
         config1.setCapabilities(testConfig.createCapabilities());
-        config1.setRemoteURL(testConfig.getGrid());
-        config1.setHeadless(true);
+        config1.setRemoteURL(testConfig.getGridURL());
+        config1.setHeadless(testConfig.isHeadless());
         config1.setTimeout(Timeout.getDefault());
 
         boolean check = Arrays.stream(Browser.values()).map(Browser::name).anyMatch(b -> b.equalsIgnoreCase(testConfig.getBrowser()));
@@ -31,5 +32,10 @@ public class TestBase {
         } else {
             Senelium.createDriver(new EdgeDriverFactory(), config1);
         }
+    }
+
+    @AfterClass(alwaysRun = true)
+    void cleanUp() {
+        Senelium.closeBrowser();
     }
 }

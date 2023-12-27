@@ -6,6 +6,7 @@ public class FirefoxCapsFactory implements CapabilitiesFactory<FirefoxOptions> {
     @Override
     public FirefoxOptions createCapabilities() {
         FirefoxOptions options = new FirefoxOptions();
+        options.setCapability("gpu", false);
         return options;
     }
 }

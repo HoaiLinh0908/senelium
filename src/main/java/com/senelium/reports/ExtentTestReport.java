@@ -34,7 +34,7 @@ public class ExtentTestReport {
     }
 
     public static void takeScreenshot(String message) {
-        String base64Image = "data:image/png;base64," + ((TakesScreenshot) Senelium.getDriver()).getScreenshotAs(OutputType.BASE64);
+        String base64Image = "data:image/png;base64," + ((TakesScreenshot) Senelium.getWebDriver()).getScreenshotAs(OutputType.BASE64);
         getTest().info(message, MediaEntityBuilder.createScreenCaptureFromBase64String(base64Image).build());
     }
 

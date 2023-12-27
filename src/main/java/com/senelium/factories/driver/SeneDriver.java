@@ -23,7 +23,7 @@ public class SeneDriver {
         return new SeneDriver(driver, defaultWait);
     }
 
-    public WebDriver getDriver() {
+    public WebDriver getWebDriver() {
         return this.driver;
     }
 

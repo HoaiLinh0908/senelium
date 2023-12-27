@@ -5,11 +5,8 @@ import com.senelium.assertion.TestAssert;
 import com.senelium.pages.GooglePage;
 import org.testng.Assert;
 import org.testng.SkipException;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
 
 public class GoogleTests extends TestBase {
     GooglePage googlePage = new GooglePage();
@@ -23,23 +20,18 @@ public class GoogleTests extends TestBase {
     @Test(description = "Test Google")
     void googleTest() {
         TestAssert test = googlePage.isSearchBarContains("Christmas");
-        Assert.assertTrue(test.isPassed(), test.getErrors());
+        Assert.assertTrue(test.getResult(), test.getErrors());
     }
 
     @Test(description = "Failed Test")
     void failedTest() {
         TestAssert test = googlePage.isSearchBarContains("New year");
-        Assert.assertTrue(test.isPassed(), test.getErrors());
+        test = googlePage.isSearchBarContains("Hola");
+        Assert.assertTrue(test.getResult(), test.getErrors());
     }
 
     @Test(description = "Skipped Test")
     void skippedTest() {
         throw new SkipException("Skip this test!");
-    }
-
-    @AfterClass(alwaysRun = true)
-    void afterClass() {
-        Senelium.sleep(Duration.ofSeconds(1));
-        Senelium.closeBrowser();
     }
 }

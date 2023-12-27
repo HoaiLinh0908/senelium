@@ -13,6 +13,7 @@ public class TestListener implements ITestListener, TestLifecycleListener {
 
     @Override
     public void onTestStart(ITestResult result) {
+        ExtentTestReport.createTest(result.getName());
     }
 
     @Override

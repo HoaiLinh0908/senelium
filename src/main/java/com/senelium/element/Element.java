@@ -51,7 +51,7 @@ public class Element {
     }
 
     public void pressEnter() {
-        getActions().sendKeys(Keys.ENTER);
+        getActions().sendKeys(Keys.ENTER).perform();
     }
 
     public boolean isTag(String tagName) {

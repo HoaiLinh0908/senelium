@@ -1,25 +1,24 @@
 package com.senelium.test;
 
 import com.senelium.Senelium;
-import com.senelium.element.Element;
-import org.openqa.selenium.By;
+import com.senelium.assertion.TestAssert;
+import com.senelium.pages.YoutubePage;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-
 public class YoutubeTests extends TestBase {
+    YoutubePage youtube = new YoutubePage();
 
     @BeforeClass(alwaysRun = true)
     void beforeClass() {
         Senelium.open("https://www.youtube.com");
     }
 
-    @Test(description = "Test Youtube")
+    @Test(description = "Verify Youtube search")
     void youtubeTest() {
-        Element search = new Element(By.cssSelector("input#search"));
-        search.type("Christmas");
-        Senelium.sleep(Duration.ofSeconds(1));
-        Senelium.closeBrowser();
+        youtube.search("Christmas");
+        TestAssert testAssert = youtube.isSearchResultDisplayed();
+        Assert.assertTrue(testAssert.getResult(), testAssert.getErrors());
     }
 }

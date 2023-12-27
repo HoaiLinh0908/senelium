@@ -7,24 +7,23 @@ import org.openqa.selenium.By;
 
 public class GooglePage {
 
+    private final Element searchBar = new Element(By.cssSelector("textarea[type='search']"));
+
     @Step("Search {0}")
     public void search(String keyword) {
-        Element search = new Element(By.cssSelector("textarea[type='search']"));
-        search.type(keyword);
-        search.pressEnter();
+        searchBar.type(keyword);
+        searchBar.pressEnter();
     }
 
     @Step("Verify the search is displayed")
     public boolean isSearchBarDisplayed() {
-        Element search = new Element(By.cssSelector("textarea[type='search']"));
-        return search.isDisplayed();
+        return searchBar.isDisplayed();
     }
 
     @Step("Verify search bar contains {0}")
     public TestAssert isSearchBarContains(String keyword) {
         TestAssert testAssert = new TestAssert();
-        Element search = new Element(By.cssSelector("textarea[type='search']"));
-        testAssert.checkEqual(search.getText(), keyword, "Search bar does not contains " + keyword + " but " + search.getText());
+        testAssert.assertEqual(searchBar.getText(), keyword, "Search bar");
         return testAssert;
     }
 }
