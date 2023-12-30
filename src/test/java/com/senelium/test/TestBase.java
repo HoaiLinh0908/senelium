@@ -1,37 +1,27 @@
 package com.senelium.test;
 
 import com.senelium.Senelium;
-import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
-import com.senelium.config.TestConfig;
-import com.senelium.config.Timeout;
-import com.senelium.customfactory.EdgeDriverFactory;
+import com.senelium.factories.driver.EdgeDriverFactory;
+import com.senelium.factories.driver.manager.DriverFactoryManager;
 import com.senelium.listener.TestListener;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
-
-import java.util.Arrays;
 
 @Listeners(TestListener.class)
 public class TestBase {
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeSuite
+    void beforeTestSuite() {
+        DriverFactoryManager.registerFactory("edge", EdgeDriverFactory::new);
+    }
+
+    @BeforeClass
     void initialTest() {
-        TestConfig testConfig = TestConfig.getInstance();
-
-        DriverConfig config1 = new DriverConfig();
-        config1.setCapabilities(testConfig.createCapabilities());
-        config1.setRemoteURL(testConfig.getGridURL());
-        config1.setHeadless(testConfig.isHeadless());
-        config1.setTimeout(Timeout.getDefault());
-
-        boolean check = Arrays.stream(Browser.values()).map(Browser::name).anyMatch(b -> b.equalsIgnoreCase(testConfig.getBrowser()));
-        if (check) {
-            Senelium.createDriver(Browser.of(testConfig.getBrowser()), config1);
-        } else {
-            Senelium.createDriver(new EdgeDriverFactory(), config1);
-        }
+        DriverConfig config = DriverConfig.getInstance();
+        Senelium.createDriver(config);
     }
 
     @AfterClass(alwaysRun = true)

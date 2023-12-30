@@ -1,10 +1,9 @@
 package com.senelium;
 
-import com.senelium.config.Browser;
 import com.senelium.config.DriverConfig;
 import com.senelium.factories.driver.DriverFactory;
 import com.senelium.factories.driver.SeneDriver;
-import com.senelium.factories.driver.manager.FactoryManager;
+import com.senelium.factories.driver.manager.DriverFactoryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Cookie;
@@ -23,15 +22,9 @@ public class Senelium {
     private Senelium() {
     }
 
-    public static void createDriver(Browser browser, DriverConfig config) {
-        FactoryManager factoryManager = new FactoryManager();
-        DriverFactory driverFactory = factoryManager.findFactory(browser);
-        createDriver(driverFactory, config);
-    }
-
-    //Can use this for custom driver factory
-    public static void createDriver(DriverFactory factory, DriverConfig config) {
-        threadWebDriver.set(factory.createDriver(config));
+    public static void createDriver(DriverConfig config) {
+        DriverFactory driverFactory = DriverFactoryManager.findFactory(config.getBrowser());
+        threadWebDriver.set(driverFactory.createDriver(config));
     }
 
     public static SeneDriver getSeneDriver() {

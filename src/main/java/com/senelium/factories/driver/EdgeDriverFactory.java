@@ -1,4 +1,4 @@
-package com.senelium.customfactory;
+package com.senelium.factories.driver;
 
 import com.senelium.config.DriverConfig;
 import com.senelium.factories.driver.SeneDriver;
@@ -29,6 +29,6 @@ public class EdgeDriverFactory implements DriverFactory {
             driver = new EdgeDriver(options);
         }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getDefaultElementWait());
+        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
     }
 }

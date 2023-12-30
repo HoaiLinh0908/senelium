@@ -26,6 +26,6 @@ public class FirefoxDriverFactory implements DriverFactory {
             driver = new FirefoxDriver(options);
         }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getDefaultElementWait());
+        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
     }
 }

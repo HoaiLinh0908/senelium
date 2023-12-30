@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 public class GoogleTests extends TestBase {
     GooglePage googlePage = new GooglePage();
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeClass
     void beforeClass() {
         Senelium.open("https://www.google.com");
         googlePage.search("Christmas");

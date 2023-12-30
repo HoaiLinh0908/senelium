@@ -29,6 +29,6 @@ public class ChromeDriverFactory implements DriverFactory {
             driver = new ChromeDriver(options);
         }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getDefaultElementWait());
+        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
     }
 }

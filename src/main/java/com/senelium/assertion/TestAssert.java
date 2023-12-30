@@ -5,6 +5,7 @@ import com.senelium.reports.AllureReport;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: Improve this to wrap the Assert commands
 public class TestAssert {
     private final List<String> errors = new ArrayList<>();
 
