@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 @Slf4j
 public class CapsFactoryManager {
-    private final Map<String, Supplier<? extends CapabilitiesFactory>> factories;
+    private final Map<String, Supplier<CapabilitiesFactory>> factories;
 
     private CapsFactoryManager() {
         factories = new HashMap<>();
@@ -29,7 +29,7 @@ public class CapsFactoryManager {
     }
 
     public static CapabilitiesFactory findFactory(String browser) {
-        Supplier<? extends CapabilitiesFactory> temp = getFactories().get(browser);
+        Supplier<CapabilitiesFactory> temp = getFactories().get(browser);
         if (temp == null) {
             log.warn(String.format("No available Capabilities factory for \"%s\". " +
                             "Will return a MutableCapabilities object. " +
@@ -41,14 +41,14 @@ public class CapsFactoryManager {
         return temp.get();
     }
 
-    public static synchronized void registerFactory(String key, Supplier<? extends CapabilitiesFactory> supplier) {
+    public static synchronized void registerFactory(String key, Supplier<CapabilitiesFactory> supplier) {
         if (getFactories().containsKey(key.toLowerCase())) {
             throw new RuntimeException("The key \"" + key + "\" already exists. Existing key(s) are" + getAvailableFactory());
         }
         getFactories().put(key, supplier);
     }
 
-    private static Map<String, Supplier<? extends CapabilitiesFactory>> getFactories() {
+    private static Map<String, Supplier<CapabilitiesFactory>> getFactories() {
         return getInstance().factories;
     }
 

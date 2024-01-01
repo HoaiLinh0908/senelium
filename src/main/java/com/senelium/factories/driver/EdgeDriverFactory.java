@@ -1,34 +1,35 @@
 package com.senelium.factories.driver;
 
-import com.senelium.config.DriverConfig;
-import com.senelium.factories.driver.SeneDriver;
-import com.senelium.factories.driver.DriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.time.Duration;
 
-public class EdgeDriverFactory implements DriverFactory {
+public class EdgeDriverFactory implements DriverFactory<EdgeOptions> {
 
     @Override
-    public SeneDriver createDriver(DriverConfig config) {
+    public EdgeOptions initCapabilities(Capabilities caps) {
         EdgeOptions options = new EdgeOptions();
-        options.merge(config.getCapabilities());
-        if (config.isHeadless()) options.addArguments("--headless");
-        options.setPageLoadTimeout(Duration.ofSeconds(config.getTimeout().getPageLoad()));
+        options.merge(caps);
+        return options;
+    }
 
-        WebDriver driver;
-        if (StringUtils.isNotEmpty(config.getRemoteURL())) {
-            driver = new RemoteWebDriver(config.getRemoteAddress(), options);
-        } else {
-            WebDriverManager.edgedriver().setup();
-            driver = new EdgeDriver(options);
-        }
+    @Override
+    public void setHeadless(EdgeOptions options) {
+        options.addArguments("--headless");
+    }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
+    @Override
+    public void setPageLoadTimeout(EdgeOptions options, int timeout) {
+        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+    }
+
+    @Override
+    public WebDriver createLocalWebDriver(EdgeOptions options) {
+        WebDriverManager.edgedriver().setup();
+        return new EdgeDriver(options);
     }
 }

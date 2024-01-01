@@ -23,7 +23,7 @@ public class Senelium {
     }
 
     public static void createDriver(DriverConfig config) {
-        DriverFactory driverFactory = DriverFactoryManager.findFactory(config.getBrowser());
+        DriverFactory<?> driverFactory = DriverFactoryManager.findFactory(config.getBrowser());
         threadWebDriver.set(driverFactory.createDriver(config));
     }
 

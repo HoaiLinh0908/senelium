@@ -3,7 +3,6 @@ package com.senelium.test;
 import com.senelium.Senelium;
 import com.senelium.assertion.TestAssert;
 import com.senelium.pages.GooglePage;
-import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -19,15 +18,18 @@ public class GoogleTests extends TestBase {
 
     @Test(description = "Test Google")
     void googleTest() {
-        TestAssert test = googlePage.isSearchBarContains("Christmas");
-        Assert.assertTrue(test.getResult(), test.getErrors());
+        TestAssert test = new TestAssert();
+        test.assertTrue(googlePage.isSearchBarContains("Christmas"), "Search bar contains Christmas");
+        test.assertAll();
     }
 
     @Test(description = "Failed Test")
     void failedTest() {
-        TestAssert test = googlePage.isSearchBarContains("New year");
-        test = googlePage.isSearchBarContains("Hola");
-        Assert.assertTrue(test.getResult(), test.getErrors());
+        TestAssert test = new TestAssert();
+
+        test.assertTrue(googlePage.isSearchBarContains("New year"), "Search bar contains New year");
+        test.assertTrue(googlePage.isSearchBarContains("Hola"), "Search bar contains Hola");
+        test.assertAll();
     }
 
     @Test(description = "Skipped Test")

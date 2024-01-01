@@ -1,31 +1,35 @@
 package com.senelium.factories.driver;
 
-import com.senelium.config.DriverConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.time.Duration;
 
-public class FirefoxDriverFactory implements DriverFactory {
+public class FirefoxDriverFactory implements DriverFactory<FirefoxOptions> {
+
     @Override
-    public SeneDriver createDriver(DriverConfig config) {
+    public FirefoxOptions initCapabilities(Capabilities caps) {
         FirefoxOptions options = new FirefoxOptions();
-        options.merge(config.getCapabilities());
-        if (config.isHeadless()) options.addArguments("--headless");
-        options.setPageLoadTimeout(Duration.ofSeconds(config.getTimeout().getPageLoad()));
+        options.merge(caps);
+        return options;
+    }
 
-        WebDriver driver;
-        if (StringUtils.isNotEmpty(config.getRemoteURL())) {
-            driver = new RemoteWebDriver(config.getRemoteAddress(), options);
-        } else {
-            WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver(options);
-        }
+    @Override
+    public void setHeadless(FirefoxOptions options) {
+        options.addArguments("--headless");
+    }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
+    @Override
+    public void setPageLoadTimeout(FirefoxOptions options, int timeout) {
+        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+    }
+
+    @Override
+    public WebDriver createLocalWebDriver(FirefoxOptions options) {
+        WebDriverManager.firefoxdriver().setup();
+        return new FirefoxDriver(options);
     }
 }

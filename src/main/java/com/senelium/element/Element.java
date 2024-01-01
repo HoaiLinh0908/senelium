@@ -20,6 +20,38 @@ public class Element {
         this.locator = locator;
     }
 
+    public static Element byXpath(String xpath) {
+        return new Element(By.xpath(xpath));
+    }
+
+    public static Element byCssSelector(String cssSelector) {
+        return new Element(By.cssSelector(cssSelector));
+    }
+
+    public static Element byId(String id) {
+        return new Element(By.id(id));
+    }
+
+    public static Element byClass(String className) {
+        return new Element(By.className(className));
+    }
+
+    public static Element byLinkText(String link) {
+        return new Element(By.linkText(link));
+    }
+
+    public static Element byPartialLinkText(String partialLinkText) {
+        return new Element(By.partialLinkText(partialLinkText));
+    }
+
+    public static Element byTag(String tag) {
+        return new Element(By.tagName(tag));
+    }
+
+    public static Element byName(String name) {
+        return new Element(By.name(name));
+    }
+
     public WebElement findElement() {
         return getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
     }

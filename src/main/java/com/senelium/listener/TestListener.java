@@ -23,7 +23,6 @@ public class TestListener implements ITestListener, TestLifecycleListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        ExtentTestReport.takeScreenshot(result.getName() + "_screenshot");
         ExtentTestReport.logMessage(Status.FAIL, "Failed test");
     }
 
@@ -33,18 +32,8 @@ public class TestListener implements ITestListener, TestLifecycleListener {
     }
 
     @Override
-    public void onStart(ITestContext context) {
-    }
-
-    @Override
     public void onFinish(ITestContext result) {
         ExtentTestReport.getExtentReports().flush();
     }
 
-//    @Override
-//    public void beforeTestStop(TestResult result) {
-//        if (result.getStatus() == io.qameta.allure.model.Status.FAILED || result.getStatus() == io.qameta.allure.model.Status.BROKEN) {
-//            AllureReport.takeScreenshot();
-//        }
-//    }
 }

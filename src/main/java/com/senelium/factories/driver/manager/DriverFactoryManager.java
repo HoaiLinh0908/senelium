@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public class DriverFactoryManager {
 
-    private final Map<String, Supplier<? extends DriverFactory>> factories;
+    private final Map<String, Supplier<DriverFactory<?>>> factories;
 
     private DriverFactoryManager() {
         factories = new HashMap<>();
@@ -26,8 +26,8 @@ public class DriverFactoryManager {
         return InstanceHolder.instance;
     }
 
-    public static DriverFactory findFactory(String browser) {
-        Supplier<? extends DriverFactory> temp = getFactories().get(browser);
+    public static DriverFactory<?> findFactory(String browser) {
+        Supplier<DriverFactory<?>> temp = getFactories().get(browser);
         if (temp == null) {
             String message = String.format("No available Driver factory for \"%s\". " +
                             "Please refer to these available factories: %s. " +
@@ -38,14 +38,14 @@ public class DriverFactoryManager {
         return temp.get();
     }
 
-    public static synchronized void registerFactory(String key, Supplier<? extends DriverFactory> factorySupplier) {
+    public static synchronized void registerFactory(String key, Supplier<DriverFactory<?>> factorySupplier) {
         if (getFactories().containsKey(key.toLowerCase())) {
             throw new RuntimeException("A factory with key \"" + key + "\" already exists. Existing key(s) are " + getAvailableFactory());
         }
         getFactories().put(key, factorySupplier);
     }
 
-    private static Map<String, Supplier<? extends DriverFactory>> getFactories() {
+    private static Map<String, Supplier<DriverFactory<?>>> getFactories() {
         return getInstance().factories;
     }
 

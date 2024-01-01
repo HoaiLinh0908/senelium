@@ -1,11 +1,11 @@
 package com.senelium.assertion;
 
 import com.senelium.reports.AllureReport;
+import org.testng.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Improve this to wrap the Assert commands
 public class TestAssert {
     private final List<String> errors = new ArrayList<>();
 
@@ -24,11 +24,11 @@ public class TestAssert {
         }
     }
 
-    public boolean getResult() {
-        return errors.isEmpty();
+    public void assertAll() {
+        Assert.assertTrue(errors.isEmpty(), getErrorMessage());
     }
 
-    public String getErrors() {
+    public String getErrorMessage() {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < errors.size(); i++) {
             builder.append(i + 1).append(". ").append(errors.get(i)).append(" ");

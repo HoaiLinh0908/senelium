@@ -1,34 +1,37 @@
 package com.senelium.factories.driver;
 
-import com.senelium.config.DriverConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.time.Duration;
 
 @Slf4j
-public class ChromeDriverFactory implements DriverFactory {
+public class ChromeDriverFactory implements DriverFactory<ChromeOptions> {
 
     @Override
-    public SeneDriver createDriver(DriverConfig config) {
+    public ChromeOptions initCapabilities(Capabilities caps) {
         ChromeOptions options = new ChromeOptions();
-        options.merge(config.getCapabilities());
-        if (config.isHeadless()) options.addArguments("--headless=new");
-        options.setPageLoadTimeout(Duration.ofSeconds(config.getTimeout().getPageLoad()));
+        options.merge(caps);
+        return options;
+    }
 
-        WebDriver driver;
-        if (StringUtils.isNotEmpty(config.getRemoteURL())) {
-            driver = new RemoteWebDriver(config.getRemoteAddress(), options);
-        } else {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver(options);
-        }
+    @Override
+    public void setHeadless(ChromeOptions options) {
+        options.addArguments("--headless=new");
+    }
 
-        return SeneDriver.newInstance(driver, config.getTimeout().getElementWait());
+    @Override
+    public void setPageLoadTimeout(ChromeOptions options, int timeout) {
+        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+    }
+
+    @Override
+    public WebDriver createLocalWebDriver(ChromeOptions options) {
+        WebDriverManager.chromedriver().setup();
+        return new ChromeDriver(options);
     }
 }
