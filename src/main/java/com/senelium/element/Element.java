@@ -77,9 +77,17 @@ public class Element {
         findElement().click();
     }
 
+    public void clickByJs() {
+        Senelium.executeJavascript("arguments[0].click();", findElement());
+    }
+
     public void type(String keys) {
         scrollToView();
         findElement().sendKeys(keys);
+    }
+
+    public void setValue(String value) {
+        Senelium.executeJavascript(String.format("arguments[0].value = \"%s\";", value), findElement());
     }
 
     public void pressEnter() {
@@ -127,7 +135,7 @@ public class Element {
     }
 
     private WebDriverWait getWaiter() {
-        return Senelium.getSeneDriver().getDefaultWaiter();
+        return Senelium.getDefaultWaiter();
     }
 
     private WebDriverWait getWaiter(long millis) {
@@ -135,6 +143,6 @@ public class Element {
     }
 
     private Actions getActions() {
-        return Senelium.getSeneDriver().getActions();
+        return Senelium.getActions();
     }
 }

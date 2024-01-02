@@ -7,6 +7,7 @@ import com.senelium.factories.driver.manager.DriverFactoryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -34,7 +35,7 @@ public class Senelium {
         return threadWebDriver.get();
     }
 
-    public static WebDriver getWebDriver() {
+    public static WebDriver getDriver() {
         return getSeneDriver().getWebDriver();
     }
 
@@ -48,12 +49,12 @@ public class Senelium {
 
     public static void open(String url) {
         log.info("Navigate to {}", url);
-        getSeneDriver().getWebDriver().get(url);
+        getDriver().get(url);
     }
 
     public static void closeBrowser() {
         log.info("Quit the driver");
-        getSeneDriver().getWebDriver().quit();
+        getDriver().quit();
         threadWebDriver.remove();
     }
 
@@ -66,30 +67,40 @@ public class Senelium {
     }
 
     public static void refresh() {
-        getWebDriver().navigate().refresh();
+        getDriver().navigate().refresh();
     }
 
     public static Cookie getCookie(String name) {
-        return getWebDriver().manage().getCookieNamed(name);
+        return getDriver().manage().getCookieNamed(name);
     }
 
     public static List<Cookie> getCookies() {
-        return new ArrayList<>(getWebDriver().manage().getCookies());
+        return new ArrayList<>(getDriver().manage().getCookies());
     }
 
     public static void addCookie(Cookie cookie) {
-        getWebDriver().manage().addCookie(cookie);
+        getDriver().manage().addCookie(cookie);
     }
 
     public static void clearCookie(String name) {
-        getWebDriver().manage().deleteCookieNamed(name);
+        getDriver().manage().deleteCookieNamed(name);
     }
 
     public static void clearCookies() {
-        getWebDriver().manage().deleteAllCookies();
+        getDriver().manage().deleteAllCookies();
     }
 
     public static Alert getAlert() {
-        return getWebDriver().switchTo().alert();
+        return getDriver().switchTo().alert();
+    }
+
+    public static Object executeJavascript(String script, Object... args) {
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        return jsExecutor.executeScript(script, args);
+    }
+
+    public static Object executeAsyncJavascript(String script, Object... args) {
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        return jsExecutor.executeAsyncScript(script, args);
     }
 }
