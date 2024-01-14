@@ -5,14 +5,10 @@ import com.senelium.factories.driver.DriverFactory;
 import com.senelium.factories.driver.SeneDriver;
 import com.senelium.factories.driver.manager.DriverFactoryManager;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +52,10 @@ public class Senelium {
         log.info("Quit the driver");
         getDriver().quit();
         threadWebDriver.remove();
+    }
+
+    public static void closeCurrentTab() {
+        getDriver().close();
     }
 
     public static void sleep(long mil) {
@@ -102,5 +102,22 @@ public class Senelium {
     public static Object executeAsyncJavascript(String script, Object... args) {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
         return jsExecutor.executeAsyncScript(script, args);
+    }
+
+    public static void closeCurrentAndSwitchToNewTab() {
+        closeCurrentTab();
+        getDriver().switchTo().window(new ArrayList<>(getDriver().getWindowHandles()).get(0));
+    }
+
+    public static void scrollToElement(WebElement element) {
+        getActions().scrollToElement(element).perform();
+    }
+
+    public static void switchToFrame(int index) {
+        getDriver().switchTo().frame(index);
+    }
+
+    public static void switchToMainWindow() {
+        getDriver().switchTo().defaultContent();
     }
 }

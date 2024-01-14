@@ -1,14 +1,14 @@
 package com.senelium.pages;
 
+import com.senelium.Senelium;
 import com.senelium.element.Element;
 import com.senelium.models.SearchedHotel;
 import io.qameta.allure.Step;
-import org.openqa.selenium.WebElement;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class AgodaPage {
+public class AgodaHomePage extends BasePage {
 
     private final Element searchBar = Element.byCssSelector("div[class*='Searchbox'] input");
     private final Element checkInBox = Element.byId("check-in-box");
@@ -16,7 +16,6 @@ public class AgodaPage {
     private final Element adultsEle = Element.byCssSelector("[data-selenium='occupancyAdults'] h3");
     private final Element childrenEle = Element.byCssSelector("[data-selenium='occupancyChildren'] h3");
     private final Element searchButton = Element.byCssSelector("[data-selenium='searchButton']");
-    private final Element hotelDestination = Element.byCssSelector("li[data-selenium=\"hotel-item\"] span[data-selenium='area-city-text']");
 
     private final Element loadingIcon = Element.byCssSelector("div.ModalLoadingSpinner__content--icon");
 
@@ -25,11 +24,7 @@ public class AgodaPage {
         selectDate(hotel.getCheckInDate(), hotel.getCheckOutDate());
         setOccupancy(hotel.getOccupancy());
         clickSearch();
-        waitUntilLoadingIconDisappeared();
-    }
-
-    public void waitUntilLoadingIconDisappeared() {
-        loadingIcon.waitUntilNotDisplayed();
+        Senelium.closeCurrentAndSwitchToNewTab();
     }
 
     @Step("Search {0}")
@@ -86,12 +81,5 @@ public class AgodaPage {
 
     public void clickSearch() {
         searchButton.click();
-    }
-
-    public boolean hotelResultsContainCorrectDestination(String expectedDestination) {
-        return hotelDestination.findVisibleElements()
-                .subList(0, 5)
-                .stream()
-                .map(WebElement::getText).allMatch(t -> t.contains(expectedDestination));
     }
 }

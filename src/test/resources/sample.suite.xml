@@ -5,7 +5,7 @@
     <test name="Test" parallel="classes" thread-count="2">
         <classes>
             <class name="com.senelium.test.AgodaFirstTest"/>
-            <class name="com.senelium.test.YoutubeTests"/>
+            <class name="com.senelium.test.AgodaSecondTest"/>
         </classes>
     </test>
 

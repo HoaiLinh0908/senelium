@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class Element {
@@ -76,6 +77,10 @@ public class Element {
         return getWaiter().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
 
+    public int countVisibleElements() {
+        return findVisibleElements().size();
+    }
+
     public boolean isDisplayed() {
         return findElement().isDisplayed();
     }
@@ -109,10 +114,15 @@ public class Element {
     }
 
     public String getText() {
-        if (isTag("input") || isTag("textarea")) {
-            return getAttribute("value");
-        }
         return findElement().getText();
+    }
+
+    public List<String> getAllTexts() {
+        return findElements().stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public String getValue() {
+        return getAttribute("value");
     }
 
     public String getAttribute(String name) {
