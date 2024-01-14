@@ -24,8 +24,16 @@ public class Element {
         return new Element(By.xpath(xpath));
     }
 
+    public static Element byXpath(String xpath, String... formatArgs) {
+        return new Element(By.xpath(String.format(xpath, formatArgs)));
+    }
+
     public static Element byCssSelector(String cssSelector) {
         return new Element(By.cssSelector(cssSelector));
+    }
+
+    public static Element byCssSelector(String cssSelector, String... formatArgs) {
+        return new Element(By.cssSelector(String.format(cssSelector, formatArgs)));
     }
 
     public static Element byId(String id) {
@@ -73,8 +81,7 @@ public class Element {
     }
 
     public void click() {
-        scrollToView();
-        findElement().click();
+        findVisibleElement().click();
     }
 
     public void clickByJs() {
@@ -82,8 +89,7 @@ public class Element {
     }
 
     public void type(String keys) {
-        scrollToView();
-        findElement().sendKeys(keys);
+        findVisibleElement().sendKeys(keys);
     }
 
     public void setValue(String value) {
@@ -92,6 +98,10 @@ public class Element {
 
     public void pressEnter() {
         getActions().sendKeys(Keys.ENTER).perform();
+    }
+
+    public void pressEsc() {
+        getActions().sendKeys(Keys.ESCAPE).perform();
     }
 
     public boolean isTag(String tagName) {
@@ -126,12 +136,19 @@ public class Element {
     }
 
     public void hover() {
-        scrollToView();
-        getActions().moveToElement(findElement());
+        getActions().moveToElement(findVisibleElement());
+    }
+
+    public void waitUntilDisplayed() {
+        getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public void waitUntilNotDisplayed() {
         getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public void waitUntilTextChangedTo(String expect) {
+        getWaiter().until(ExpectedConditions.textToBePresentInElementLocated(locator, expect));
     }
 
     private WebDriverWait getWaiter() {

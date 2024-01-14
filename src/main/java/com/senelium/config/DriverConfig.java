@@ -14,6 +14,7 @@ public class DriverConfig {
     private final String remoteURL;
     private final boolean headless;
     private final Timeout timeout;
+    private final boolean windowMaximize;
 
     private DriverConfig() {
         this.browser = System.getProperty("browser", "chrome");
@@ -23,6 +24,7 @@ public class DriverConfig {
         this.timeout = new Timeout();
         this.timeout.setPageLoad(Integer.parseInt(System.getProperty("pageLoadTimeout", "60")));
         this.timeout.setElementWait(Integer.parseInt(System.getProperty("elementWaitTimeout", "5")));
+        this.windowMaximize = Boolean.parseBoolean(System.getProperty("headless", "true"));
     }
 
     private static final class InstanceHolder {

@@ -58,9 +58,9 @@ public class Senelium {
         threadWebDriver.remove();
     }
 
-    public static void sleep(Duration mil) {
+    public static void sleep(long mil) {
         try {
-            Thread.sleep(mil.toMillis());
+            Thread.sleep(mil);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

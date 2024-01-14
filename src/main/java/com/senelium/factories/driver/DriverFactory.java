@@ -21,6 +21,7 @@ public interface DriverFactory<T extends MutableCapabilities> {
             webDriver = createRemoteWebDriver(config.getRemoteAddress(), caps);
         } else {
             webDriver = createLocalWebDriver(caps);
+            setWindowSize(webDriver);
         }
         return SeneDriver.newInstance(webDriver, config.getTimeout().getElementWait());
     }
@@ -36,4 +37,8 @@ public interface DriverFactory<T extends MutableCapabilities> {
     }
 
     WebDriver createLocalWebDriver(T caps);
+
+    default void setWindowSize(WebDriver driver) {
+        driver.manage().window().maximize();
+    }
 }
