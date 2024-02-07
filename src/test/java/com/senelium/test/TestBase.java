@@ -22,8 +22,7 @@ public class TestBase {
 
     @BeforeClass
     void initialTest() {
-        DriverConfig config = DriverConfig.getInstance();
-        Senelium.createDriver(config);
+        Senelium.createDriver(DriverConfig.getInstance());
     }
 
     @AfterClass(alwaysRun = true)
