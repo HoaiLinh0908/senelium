@@ -22,7 +22,7 @@ public interface DriverFactory<T extends MutableCapabilities> {
             webDriver = createLocalWebDriver(caps, config.getBinary());
             if (config.isWindowMaximize()) setWindowSize(webDriver);
         }
-        return SeneDriver.newInstance(webDriver, config.getTimeout().getElementWait());
+        return SeneDriver.newInstance(webDriver, config.getTimeout());
     }
 
     T initCapabilities(MutableCapabilities caps);

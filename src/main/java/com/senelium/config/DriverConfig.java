@@ -2,7 +2,6 @@ package com.senelium.config;
 
 import com.senelium.factories.capabilities.manager.CapsFactoryManager;
 import lombok.Getter;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 
 import java.net.MalformedURLException;
@@ -26,6 +25,7 @@ public class DriverConfig {
         this.timeout = new Timeout();
         this.timeout.setPageLoad(Integer.parseInt(System.getProperty("pageLoadTimeout", "60")));
         this.timeout.setElementWait(Integer.parseInt(System.getProperty("elementWaitTimeout", "5")));
+        this.timeout.setInterval(Integer.parseInt(System.getProperty("interval", "500")));
         this.windowMaximize = Boolean.parseBoolean(System.getProperty("headless", "true"));
         this.binary = System.getProperty("binary", "");
     }

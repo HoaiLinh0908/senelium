@@ -1,5 +1,6 @@
 package com.senelium.factories.driver;
 
+import com.senelium.config.Timeout;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,15 +13,15 @@ public class SeneDriver {
     Actions actions;
     WebDriverWait defaultWaiter;
 
-    private SeneDriver(WebDriver driver, int defaultWait) {
+    private SeneDriver(WebDriver driver, Timeout timeout) {
         Objects.requireNonNull(driver);
         this.driver = driver;
         this.actions = new Actions(this.driver);
-        this.defaultWaiter = new WebDriverWait(this.driver, Duration.ofSeconds(defaultWait));
+        this.defaultWaiter = new WebDriverWait(this.driver, Duration.ofSeconds(timeout.getElementWait()), Duration.ofMillis(timeout.getInterval()));
     }
 
-    public static SeneDriver newInstance(WebDriver driver, int defaultWait) {
-        return new SeneDriver(driver, defaultWait);
+    public static SeneDriver newInstance(WebDriver driver, Timeout timeout) {
+        return new SeneDriver(driver, timeout);
     }
 
     public WebDriver getWebDriver() {
