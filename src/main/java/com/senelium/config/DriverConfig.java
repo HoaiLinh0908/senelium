@@ -3,6 +3,7 @@ package com.senelium.config;
 import com.senelium.factories.capabilities.manager.CapsFactoryManager;
 import lombok.Getter;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,11 +11,12 @@ import java.net.URL;
 @Getter
 public class DriverConfig {
     private final String browser;
-    private final Capabilities capabilities;
+    private final MutableCapabilities capabilities;
     private final String remoteURL;
     private final boolean headless;
     private final Timeout timeout;
     private final boolean windowMaximize;
+    private final String binary;
 
     private DriverConfig() {
         this.browser = System.getProperty("browser", "chrome");
@@ -25,6 +27,7 @@ public class DriverConfig {
         this.timeout.setPageLoad(Integer.parseInt(System.getProperty("pageLoadTimeout", "60")));
         this.timeout.setElementWait(Integer.parseInt(System.getProperty("elementWaitTimeout", "5")));
         this.windowMaximize = Boolean.parseBoolean(System.getProperty("headless", "true"));
+        this.binary = System.getProperty("binary", "");
     }
 
     private static final class InstanceHolder {

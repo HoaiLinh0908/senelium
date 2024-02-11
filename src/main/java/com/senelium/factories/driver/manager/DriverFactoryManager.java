@@ -38,6 +38,11 @@ public class DriverFactoryManager {
         return temp.get();
     }
 
+    /***
+     * The register method should be called once in the beforeSuite()
+     * @param key name of the factory
+     * @param factorySupplier
+     */
     public static synchronized void registerFactory(String key, Supplier<DriverFactory<?>> factorySupplier) {
         if (getFactories().containsKey(key.toLowerCase())) {
             throw new RuntimeException("A factory with key \"" + key + "\" already exists. Existing key(s) are " + getAvailableFactory());

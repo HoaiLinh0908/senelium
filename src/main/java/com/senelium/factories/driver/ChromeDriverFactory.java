@@ -2,7 +2,7 @@ package com.senelium.factories.driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -13,7 +13,7 @@ import java.time.Duration;
 public class ChromeDriverFactory implements DriverFactory<ChromeOptions> {
 
     @Override
-    public ChromeOptions initCapabilities(Capabilities caps) {
+    public ChromeOptions initCapabilities(MutableCapabilities caps) {
         ChromeOptions options = new ChromeOptions();
         options.merge(caps);
         return options;
@@ -30,8 +30,12 @@ public class ChromeDriverFactory implements DriverFactory<ChromeOptions> {
     }
 
     @Override
-    public WebDriver createLocalWebDriver(ChromeOptions options) {
-        WebDriverManager.chromedriver().setup();
+    public WebDriver createLocalWebDriver(ChromeOptions options, String binary) {
+        if (binary.isEmpty()) {
+            WebDriverManager.chromedriver().setup();
+        } else {
+            options.setBinary(binary);
+        }
         return new ChromeDriver(options);
     }
 }

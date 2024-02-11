@@ -1,7 +1,7 @@
 package com.senelium.factories.driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -11,7 +11,7 @@ import java.time.Duration;
 public class EdgeDriverFactory implements DriverFactory<EdgeOptions> {
 
     @Override
-    public EdgeOptions initCapabilities(Capabilities caps) {
+    public EdgeOptions initCapabilities(MutableCapabilities caps) {
         EdgeOptions options = new EdgeOptions();
         options.merge(caps);
         return options;
@@ -28,8 +28,12 @@ public class EdgeDriverFactory implements DriverFactory<EdgeOptions> {
     }
 
     @Override
-    public WebDriver createLocalWebDriver(EdgeOptions options) {
-        WebDriverManager.edgedriver().setup();
+    public WebDriver createLocalWebDriver(EdgeOptions options, String binary) {
+        if (binary.isEmpty()) {
+            WebDriverManager.edgedriver().setup();
+        } else {
+            options.setBinary(binary);
+        }
         return new EdgeDriver(options);
     }
 }

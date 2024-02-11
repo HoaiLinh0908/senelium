@@ -2,7 +2,6 @@ package com.senelium.factories.driver;
 
 import com.senelium.config.DriverConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -20,13 +19,13 @@ public interface DriverFactory<T extends MutableCapabilities> {
         if (StringUtils.isNotEmpty(config.getRemoteURL())) {
             webDriver = createRemoteWebDriver(config.getRemoteAddress(), caps);
         } else {
-            webDriver = createLocalWebDriver(caps);
-            setWindowSize(webDriver);
+            webDriver = createLocalWebDriver(caps, config.getBinary());
+            if (config.isWindowMaximize()) setWindowSize(webDriver);
         }
         return SeneDriver.newInstance(webDriver, config.getTimeout().getElementWait());
     }
 
-    T initCapabilities(Capabilities caps);
+    T initCapabilities(MutableCapabilities caps);
 
     void setHeadless(T caps);
 
@@ -36,7 +35,7 @@ public interface DriverFactory<T extends MutableCapabilities> {
         return new RemoteWebDriver(url, caps);
     }
 
-    WebDriver createLocalWebDriver(T caps);
+    WebDriver createLocalWebDriver(T caps, String binary);
 
     default void setWindowSize(WebDriver driver) {
         driver.manage().window().maximize();

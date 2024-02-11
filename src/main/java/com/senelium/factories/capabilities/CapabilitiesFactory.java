@@ -1,6 +1,6 @@
 package com.senelium.factories.capabilities;
 
-import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 
@@ -14,5 +14,5 @@ public interface CapabilitiesFactory {
         return logPref;
     }
 
-    Capabilities createCapabilities();
+    MutableCapabilities createCapabilities();
 }
