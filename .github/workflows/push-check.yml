@@ -1,0 +1,23 @@
+name: Compile code for each push to development
+
+on:
+  push:
+    branches: [ 'development' ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'maven'
+
+      - name: Build code skip test
+        run: mvn clean install -Dmaven.test.skip.exec
