@@ -1,9 +1,7 @@
-package com.senelium.test;
+package com.senelium;
 
-import com.senelium.Senelium;
 import com.senelium.config.DriverConfig;
-import com.senelium.factories.driver.EdgeDriverFactory;
-import com.senelium.factories.driver.manager.DriverFactoryManager;
+import com.senelium.config.TestConfig;
 import com.senelium.listener.TestListener;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.AfterClass;
@@ -14,19 +12,20 @@ import org.testng.annotations.Listeners;
 @Slf4j
 @Listeners(TestListener.class)
 public class TestBase {
+    protected TestConfig config;
 
-    @BeforeSuite
-    void beforeTestSuite() {
-        DriverFactoryManager.registerFactory("edge", EdgeDriverFactory::new);
+    @BeforeSuite(alwaysRun = true)
+    public void beforeTestSuite() {
+        config = TestConfig.getInstance();
     }
 
-    @BeforeClass
-    void initialTest() {
+    @BeforeClass(alwaysRun = true)
+    public void initialTest() {
         Senelium.createDriver(DriverConfig.getInstance());
     }
 
     @AfterClass(alwaysRun = true)
-    void cleanUp() {
+    public void cleanUp() {
         Senelium.closeBrowser();
     }
 }

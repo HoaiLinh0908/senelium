@@ -2,6 +2,7 @@ package com.senelium.factories.driver.manager;
 
 import com.senelium.factories.driver.ChromeDriverFactory;
 import com.senelium.factories.driver.DriverFactory;
+import com.senelium.factories.driver.EdgeDriverFactory;
 import com.senelium.factories.driver.FirefoxDriverFactory;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class DriverFactoryManager {
         factories = new HashMap<>();
         factories.put("chrome", ChromeDriverFactory::new);
         factories.put("firefox", FirefoxDriverFactory::new);
+        factories.put("edge", EdgeDriverFactory::new);
     }
 
     private static final class InstanceHolder {
