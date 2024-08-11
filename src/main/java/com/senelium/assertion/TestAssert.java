@@ -9,7 +9,14 @@ import java.util.List;
 public class TestAssert {
     private final List<String> errors = new ArrayList<>();
 
-    public void assertTrue(boolean checkpoint, String message) {
+    private TestAssert() {
+    }
+
+    public static TestAssert softAssert() {
+        return new TestAssert();
+    }
+
+    public void isTrue(boolean checkpoint, String message) {
         if (!checkpoint) {
             AllureReport.takeScreenshot();
             errors.add(message);
@@ -17,7 +24,7 @@ public class TestAssert {
     }
 
     //The object type must implement equals() and toString() appropriately
-    public <T> void assertEqual(T actual, T expected, String message) {
+    public <T> void isEqual(T actual, T expected, String message) {
         if (actual == null || !actual.equals(expected)) {
             AllureReport.takeScreenshot();
             errors.add(message + " - Expect " + expected + " but actual is " + actual);
@@ -34,5 +41,12 @@ public class TestAssert {
             builder.append(i + 1).append(". ").append(errors.get(i)).append(" ");
         }
         return builder.toString();
+    }
+
+    public static void assertTrue(boolean checkpoint, String message) {
+        if (!checkpoint) {
+            AllureReport.takeScreenshot();
+            throw new AssertionError(message);
+        }
     }
 }

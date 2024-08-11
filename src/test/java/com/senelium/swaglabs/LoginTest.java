@@ -21,8 +21,6 @@ public class LoginTest extends TestBase {
         loginPage.login("standard_user", "secret_sauce");
 
         ProductsPage productsPage = new ProductsPage();
-        TestAssert testAssert = new TestAssert();
-        testAssert.assertTrue(productsPage.isPageTitleDisplayed(), "The Products page is not displayed");
-        testAssert.assertAll();
+        TestAssert.assertTrue(productsPage.isPageTitleDisplayed(), "The Products page is not displayed");
     }
 }

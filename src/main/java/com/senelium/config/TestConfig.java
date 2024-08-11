@@ -8,6 +8,7 @@ public class TestConfig {
 
     private TestConfig() {
         this.swagLabsUrl = System.getProperty("swagLabs", "https://www.saucedemo.com");
+        //TODO: variable for report. Currently, only support Allure.
     }
 
     private static final class InstanceHolder {

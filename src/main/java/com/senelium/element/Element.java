@@ -3,7 +3,6 @@ package com.senelium.element;
 import com.senelium.Senelium;
 import lombok.Getter;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,12 +10,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 public class Element {
-    By locator;
+    private final By locator;
 
     public Element(By locator) {
         this.locator = locator;
@@ -62,29 +63,54 @@ public class Element {
         return new Element(By.name(name));
     }
 
-    public WebElement findElement() {
+    public By getLocator() {
+        return this.locator;
+    }
+
+    private WebElement findElement() {
         return getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    public WebElement findVisibleElement() {
+    private WebElement findVisibleElement() {
         return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public List<WebElement> findElements() {
-        return getWaiter().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+    // Return an empty list instead of throwing TimeoutException
+    private List<WebElement> findElements() {
+        try {
+            return getWaiter().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+        } catch (TimeoutException e) {
+            return Collections.emptyList();
+        }
     }
 
-    public List<WebElement> findVisibleElements() {
-        return getWaiter().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+    // The ExpectedConditions.visibilityOfAllElementsLocatedBy() will throw TimeoutException if there is any invisible element.
+    // That is not what I expect. I expect a list of visible elements even there are some invisible elements.
+    private List<WebElement> findVisibleElements() {
+        List<WebElement> elements = findElements();
+        List<WebElement> visibleElements = new ArrayList<>();
+        for (WebElement element : elements) {
+            try {
+                getWaiter().until(ExpectedConditions.visibilityOf(element));
+                visibleElements.add(element);
+            } catch (TimeoutException ignored) {
+            }
+        }
+        return visibleElements;
     }
 
-    public int countVisibleElements() {
-        return findVisibleElements().size();
+    public int countElements() {
+        int count = 0;
+        try {
+            return findVisibleElements().size();
+        } catch (TimeoutException e) {
+            return count;
+        }
     }
 
     public boolean isDisplayed() {
         try {
-            return findVisibleElement() != null;
+            return findElement().isDisplayed();
         } catch (TimeoutException e) {
             return false;
         }
@@ -95,7 +121,7 @@ public class Element {
     }
 
     public void clickByJs() {
-        Senelium.executeJavascript("arguments[0].click();", findElement());
+        Senelium.executeJavascript("arguments[0].click();", findVisibleElement());
     }
 
     public void type(String keys) {
@@ -103,15 +129,7 @@ public class Element {
     }
 
     public void setValue(String value) {
-        Senelium.executeJavascript(String.format("arguments[0].value = \"%s\";", value), findElement());
-    }
-
-    public void pressEnter() {
-        getActions().sendKeys(Keys.ENTER).perform();
-    }
-
-    public void pressEsc() {
-        getActions().sendKeys(Keys.ESCAPE).perform();
+        Senelium.executeJavascript(String.format("arguments[0].value = \"%s\";", value), findVisibleElement());
     }
 
     public boolean isTag(String tagName) {
@@ -119,11 +137,21 @@ public class Element {
     }
 
     public String getText() {
-        return findElement().getText();
+        return getText(false);
+    }
+
+    // If 'force' is true then do not wait until visible
+    public String getText(boolean force) {
+        return force ? findElement().getText() : findVisibleElement().getText();
     }
 
     public List<String> getAllTexts() {
-        return findElements().stream().map(WebElement::getText).collect(Collectors.toList());
+        return getAllTexts(false);
+    }
+
+    public List<String> getAllTexts(boolean force) {
+        List<WebElement> elements = force ? findElements() : findVisibleElements();
+        return elements.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public String getValue() {
@@ -158,12 +186,24 @@ public class Element {
         getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
+    public void waitUntilDisplayed(long mil) {
+        getWaiter(mil).until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
     public void waitUntilNotDisplayed() {
         getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
-    public void waitUntilTextChangedTo(String expect) {
-        getWaiter().until(ExpectedConditions.textToBePresentInElementLocated(locator, expect));
+    public void waitUntilNotDisplayed(long mil) {
+        getWaiter(mil).until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public void waitUntilTextChanged(String expectText) {
+        getWaiter().until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
+    }
+
+    public void waitUntilTextChanged(String expectText, long mil) {
+        getWaiter(mil).until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
     }
 
     private WebDriverWait getWaiter() {
