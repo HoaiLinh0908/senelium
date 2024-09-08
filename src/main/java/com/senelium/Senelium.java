@@ -9,6 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,10 @@ public class Senelium {
 
     public static WebDriverWait getDefaultWaiter() {
         return getSeneDriver().getDefaultWaiter();
+    }
+
+    public static WebDriverWait getWaiter(long mil) {
+        return Senelium.getSeneDriver().getWaiter(Duration.ofMillis(mil));
     }
 
     public static void open(String url) {

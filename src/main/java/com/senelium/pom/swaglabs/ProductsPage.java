@@ -20,7 +20,7 @@ public class ProductsPage extends BasePage {
         locator.click();
     }
 
-    public boolean isPageTitleDisplayed() {
+    public boolean isPageTitleVisible() {
         return Expect.toBeVisible(this.title);
     }
 }

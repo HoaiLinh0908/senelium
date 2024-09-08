@@ -6,53 +6,50 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
 public class Expect {
     private Expect() {
     }
 
     public static boolean toBeVisible(Element element) {
-        try {
-            getWaiter().until(ExpectedConditions.visibilityOfElementLocated(element.getLocator()));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return toBeVisible(element, -1);
     }
 
     public static boolean toBeVisible(Element element, long timeout) {
         try {
             getWaiter(timeout).until(ExpectedConditions.visibilityOfElementLocated(element.getLocator()));
-            return true;
         } catch (TimeoutException e) {
             return false;
         }
+        return true;
     }
 
-    public static boolean toBeNotVisible(Element element) {
-        try {
-            getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(element.getLocator()));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+    public static boolean toBeInvisible(Element element) {
+        return toBeInvisible(element, -1);
     }
 
-    public static boolean toBeNotVisible(Element element, long timeout) {
+    public static boolean toBeInvisible(Element element, long timeout) {
         try {
             getWaiter(timeout).until(ExpectedConditions.invisibilityOfElementLocated(element.getLocator()));
-            return true;
         } catch (TimeoutException e) {
             return false;
         }
+        return true;
     }
 
-    private static WebDriverWait getWaiter() {
-        return Senelium.getDefaultWaiter();
+    public static boolean toHaveText(Element element, String expectedText) {
+        return toHaveText(element, expectedText, -1);
     }
 
-    private static WebDriverWait getWaiter(long millis) {
-        return Senelium.getSeneDriver().getWaiter(Duration.ofMillis(millis));
+    public static boolean toHaveText(Element element, String expectedText, long timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.textToBe(element.getLocator(), expectedText));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private static WebDriverWait getWaiter(long mil) {
+        return mil < 0 ? Senelium.getDefaultWaiter() : Senelium.getWaiter(mil);
     }
 }

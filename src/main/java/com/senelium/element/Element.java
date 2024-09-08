@@ -1,26 +1,35 @@
 package com.senelium.element;
 
 import com.senelium.Senelium;
+import com.senelium.constant.Expectation;
 import lombok.Getter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
 public class Element {
     private final By locator;
+    private Map<Expectation, String> expectedConditionsMap;
 
     public Element(By locator) {
         this.locator = locator;
+    }
+
+    public static Element by(By locator) {
+        return new Element(locator);
+    }
+
+    public static Element byText(String text) {
+        return new Element(By.xpath("//*[text()=\"" + text + "\"]"));
     }
 
     public static Element byXpath(String xpath) {
@@ -28,7 +37,7 @@ public class Element {
     }
 
     public static Element byXpath(String xpath, String... formatArgs) {
-        return new Element(By.xpath(String.format(xpath, formatArgs)));
+        return new Element(By.xpath(String.format(xpath, (Object[]) formatArgs)));
     }
 
     public static Element byCssSelector(String cssSelector) {
@@ -36,7 +45,7 @@ public class Element {
     }
 
     public static Element byCssSelector(String cssSelector, String... formatArgs) {
-        return new Element(By.cssSelector(String.format(cssSelector, formatArgs)));
+        return new Element(By.cssSelector(String.format(cssSelector, (Object[]) formatArgs)));
     }
 
     public static Element byId(String id) {
@@ -67,11 +76,21 @@ public class Element {
         return this.locator;
     }
 
-    private WebElement findElement() {
+    //TODO: Improve this method to allow other mechanisms
+    public Element childByCssSelector(String cssSelector) {
+        String locatingMechanism = this.getLocator().toString().split("\\.")[1];
+        if (!"cssSelector".equals(locatingMechanism)) {
+            throw new RuntimeException("The locating of parent element should be CSS Selector");
+        }
+        String selector = (String) ((By.ByCssSelector) this.getLocator()).getRemoteParameters().value();
+        return Element.byCssSelector(selector + ">" + cssSelector);
+    }
+
+    public WebElement findElement() {
         return getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    private WebElement findVisibleElement() {
+    public WebElement findVisibleElement() {
         return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
@@ -85,7 +104,7 @@ public class Element {
     }
 
     // The ExpectedConditions.visibilityOfAllElementsLocatedBy() will throw TimeoutException if there is any invisible element.
-    // That is not what I expect. I expect a list of visible elements even there are some invisible elements.
+    // That is not what I expect. I expect a list of visible elements even there are some invisible elements on the DOM.
     private List<WebElement> findVisibleElements() {
         List<WebElement> elements = findElements();
         List<WebElement> visibleElements = new ArrayList<>();
@@ -94,18 +113,14 @@ public class Element {
                 getWaiter().until(ExpectedConditions.visibilityOf(element));
                 visibleElements.add(element);
             } catch (TimeoutException ignored) {
+                // Ignore invisible elements
             }
         }
         return visibleElements;
     }
 
-    public int countElements() {
-        int count = 0;
-        try {
-            return findVisibleElements().size();
-        } catch (TimeoutException e) {
-            return count;
-        }
+    public int countVisibleElements() {
+        return findVisibleElements().size();
     }
 
     public boolean isDisplayed() {
@@ -116,24 +131,58 @@ public class Element {
         }
     }
 
+    public boolean isEnabled() {
+        return findVisibleElement().isEnabled();
+    }
+
+    public boolean isSelected() {
+        return findVisibleElement().isSelected();
+    }
+
     public void click() {
-        findVisibleElement().click();
+        // TODO: Handle animated elements
+        getWaiter().until(ExpectedConditions.elementToBeClickable(this.locator)).click();
     }
 
     public void clickByJs() {
         Senelium.executeJavascript("arguments[0].click();", findVisibleElement());
     }
 
+    public void clearText() {
+        findVisibleElement().clear();
+    }
+
     public void type(String keys) {
         findVisibleElement().sendKeys(keys);
+    }
+
+    public void clearThenType(String keys) {
+        this.clearText();
+        this.type(keys);
     }
 
     public void setValue(String value) {
         Senelium.executeJavascript(String.format("arguments[0].value = \"%s\";", value), findVisibleElement());
     }
 
+    public void scrollToView() {
+        getActions().scrollToElement(findVisibleElement()).perform();
+    }
+
+    public void hover() {
+        getActions().moveToElement(findVisibleElement());
+    }
+
+    public void submitForm() {
+        findVisibleElement().submit();
+    }
+
+    public String getTagName() {
+        return findElement().getTagName();
+    }
+
     public boolean isTag(String tagName) {
-        return findElement().getTagName().equalsIgnoreCase(tagName);
+        return this.getTagName().equalsIgnoreCase(tagName);
     }
 
     public String getText() {
@@ -162,24 +211,67 @@ public class Element {
         return findElement().getAttribute(name);
     }
 
+    public String getDomAttribute(String name) {
+        return findElement().getDomAttribute(name);
+    }
+
     public String getProperty(String name) {
         return findElement().getDomProperty(name);
     }
 
-    public boolean isEnabled() {
-        return findElement().isEnabled();
+    public String getAriaRole() {
+        return findElement().getAriaRole();
     }
 
-    public boolean isSelected() {
-        return findElement().isSelected();
+    public String getAccessibleName() {
+        return findElement().getAccessibleName();
     }
 
-    public void scrollToView() {
-        getActions().scrollToElement(findVisibleElement()).perform();
+    public SearchContext getShadowRoot() {
+        return findElement().getShadowRoot();
     }
 
-    public void hover() {
-        getActions().moveToElement(findVisibleElement());
+    public Point getLocation() {
+        return findVisibleElement().getLocation();
+    }
+
+    public Dimension getSize() {
+        return findElement().getSize();
+    }
+
+    public Rectangle getRect() {
+        return findElement().getRect();
+    }
+
+    public String getCssValue(String propertyName) {
+        return findElement().getCssValue(propertyName);
+    }
+
+    // TODO: I have not tested this method :)
+    public void waitFor(Expectation exp) {
+        Map<Expectation, String> tempMap = getExpectationMap();
+        String methodName = tempMap.get(exp);
+        try {
+            Method method = ExpectedConditions.class.getDeclaredMethod(methodName, By.class);
+            getWaiter().until((ExpectedCondition<?>) method.invoke(null, this.locator));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Map<Expectation, String> getExpectationMap() {
+        if (this.expectedConditionsMap == null) {
+            initExpectationMap();
+        }
+        return this.expectedConditionsMap;
+    }
+
+    private void initExpectationMap() {
+        this.expectedConditionsMap = new HashMap<>() {{
+            put(Expectation.VISIBLE, "visibilityOfElementLocated");
+            put(Expectation.HIDDEN, "invisibilityOfElementLocated");
+            put(Expectation.TEXT_CHANGE, "textToBePresentInElementLocated");
+        }};
     }
 
     public void waitUntilDisplayed() {
@@ -210,8 +302,8 @@ public class Element {
         return Senelium.getDefaultWaiter();
     }
 
-    private WebDriverWait getWaiter(long millis) {
-        return Senelium.getSeneDriver().getWaiter(Duration.ofMillis(millis));
+    private WebDriverWait getWaiter(long mil) {
+        return Senelium.getWaiter(mil);
     }
 
     private Actions getActions() {
