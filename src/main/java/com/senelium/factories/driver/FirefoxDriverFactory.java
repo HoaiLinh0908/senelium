@@ -24,7 +24,7 @@ public class FirefoxDriverFactory implements DriverFactory<FirefoxOptions> {
 
     @Override
     public void setPageLoadTimeout(FirefoxOptions options, int timeout) {
-        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+        options.setPageLoadTimeout(Duration.ofMillis(timeout));
     }
 
     @Override

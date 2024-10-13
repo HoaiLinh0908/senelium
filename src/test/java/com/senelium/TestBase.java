@@ -12,7 +12,8 @@ import org.testng.annotations.Listeners;
 @Slf4j
 @Listeners(TestListener.class)
 public class TestBase {
-    protected TestConfig config;
+    protected TestConfig testConfig;
+    protected DriverConfig driverConfig;
 
     protected void open(String url) {
         Senelium.open(url);
@@ -20,19 +21,17 @@ public class TestBase {
 
     @BeforeSuite(alwaysRun = true)
     public void beforeTestSuite() {
-        // Set the test configuration before executing the suite
-        config = TestConfig.getInstance();
+        testConfig = TestConfig.getInstance();
+        driverConfig = DriverConfig.getInstance();
     }
 
     @BeforeClass(alwaysRun = true)
     public void initialTest() {
-        // Because tests are paralleled by classes, we create a new driver before execute tests in each class
-        Senelium.createDriver(DriverConfig.getInstance());
+        Senelium.createDriver(driverConfig);
     }
 
     @AfterClass(alwaysRun = true)
     public void cleanUp() {
-        // Close browser after executing tests in a class
         Senelium.closeBrowser();
     }
 }

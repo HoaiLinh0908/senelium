@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -274,19 +273,19 @@ public class Element {
         }};
     }
 
-    public void waitUntilDisplayed() {
+    public void waitForVisible() {
         getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public void waitUntilDisplayed(long mil) {
+    public void waitForVisible(int mil) {
         getWaiter(mil).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public void waitUntilNotDisplayed() {
+    public void waitForInvisible() {
         getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
-    public void waitUntilNotDisplayed(long mil) {
+    public void waitForInvisible(int mil) {
         getWaiter(mil).until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
@@ -294,7 +293,7 @@ public class Element {
         getWaiter().until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
     }
 
-    public void waitUntilTextChanged(String expectText, long mil) {
+    public void waitUntilTextChanged(String expectText, int mil) {
         getWaiter(mil).until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
     }
 
@@ -302,7 +301,7 @@ public class Element {
         return Senelium.getDefaultWaiter();
     }
 
-    private WebDriverWait getWaiter(long mil) {
+    private WebDriverWait getWaiter(int mil) {
         return Senelium.getWaiter(mil);
     }
 

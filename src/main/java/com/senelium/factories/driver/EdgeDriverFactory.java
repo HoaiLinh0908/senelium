@@ -24,7 +24,7 @@ public class EdgeDriverFactory implements DriverFactory<EdgeOptions> {
 
     @Override
     public void setPageLoadTimeout(EdgeOptions options, int timeout) {
-        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+        options.setPageLoadTimeout(Duration.ofMillis(timeout));
     }
 
     @Override

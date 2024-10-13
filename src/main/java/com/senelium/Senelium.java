@@ -2,7 +2,7 @@ package com.senelium;
 
 import com.senelium.config.DriverConfig;
 import com.senelium.factories.driver.DriverFactory;
-import com.senelium.factories.driver.SeneDriver;
+import com.senelium.factories.driver.SeDriver;
 import com.senelium.factories.driver.manager.DriverFactoryManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 public class Senelium {
-    private static final ThreadLocal<SeneDriver> threadWebDriver = new ThreadLocal<>();
+    private static final ThreadLocal<SeDriver> threadWebDriver = new ThreadLocal<>();
 
     private Senelium() {
     }
@@ -23,32 +23,35 @@ public class Senelium {
     public static void createDriver(DriverConfig config) {
         DriverFactory<?> driverFactory = DriverFactoryManager.findFactory(config.getBrowser());
         threadWebDriver.set(driverFactory.createDriver(config));
+        log.info("Successfully created driver with configuration {}", config);
     }
 
-    public static SeneDriver getSeneDriver() {
+    public static SeDriver getSeDriver() {
         if (threadWebDriver.get() == null) {
-            throw new RuntimeException("Driver not found. Please create a driver first.");
+            throw new RuntimeException("Driver not found. Driver might not be initialized.");
         }
         return threadWebDriver.get();
     }
 
     public static WebDriver getDriver() {
-        return getSeneDriver().getWebDriver();
+        return getSeDriver().getWebDriver();
     }
 
     public static Actions getActions() {
-        return getSeneDriver().getActions();
+        return getSeDriver().getActions();
     }
 
     public static WebDriverWait getDefaultWaiter() {
-        return getSeneDriver().getDefaultWaiter();
+        return getSeDriver().getDefaultWaiter();
     }
 
-    public static WebDriverWait getWaiter(long mil) {
-        return Senelium.getSeneDriver().getWaiter(Duration.ofMillis(mil));
+    public static WebDriverWait getWaiter(int mil) {
+        if (mil < 0) throw new InvalidArgumentException("Waiter timeout must be or greater than 0.");
+        return Senelium.getSeDriver().getWaiter(Duration.ofMillis(mil));
     }
 
     public static void open(String url) {
+        //support 'baseUrl'?
         log.info("Navigate to {}", url);
         getDriver().get(url);
     }

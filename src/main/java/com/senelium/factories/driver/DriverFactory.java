@@ -10,7 +10,7 @@ import java.net.URL;
 
 public interface DriverFactory<T extends MutableCapabilities> {
 
-    default SeneDriver createDriver(DriverConfig config) {
+    default SeDriver createDriver(DriverConfig config) {
         T caps = initCapabilities(config.getCapabilities());
         if (config.isHeadless()) setHeadless(caps);
         setPageLoadTimeout(caps, config.getTimeout().getPageLoad());
@@ -22,7 +22,7 @@ public interface DriverFactory<T extends MutableCapabilities> {
             webDriver = createLocalWebDriver(caps, config.getBinary());
             if (config.isWindowMaximize()) setWindowSize(webDriver);
         }
-        return SeneDriver.newInstance(webDriver, config.getTimeout());
+        return SeDriver.newInstance(webDriver, config.getTimeout());
     }
 
     T initCapabilities(MutableCapabilities caps);

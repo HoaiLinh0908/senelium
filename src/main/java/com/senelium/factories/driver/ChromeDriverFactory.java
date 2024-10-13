@@ -26,7 +26,7 @@ public class ChromeDriverFactory implements DriverFactory<ChromeOptions> {
 
     @Override
     public void setPageLoadTimeout(ChromeOptions options, int timeout) {
-        options.setPageLoadTimeout(Duration.ofSeconds(timeout));
+        options.setPageLoadTimeout(Duration.ofMillis(timeout));
     }
 
     @Override

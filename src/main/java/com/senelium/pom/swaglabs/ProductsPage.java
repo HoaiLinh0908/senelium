@@ -1,6 +1,6 @@
 package com.senelium.pom.swaglabs;
 
-import com.senelium.assertion.Expect;
+import com.senelium.assertion.SeAssert;
 import com.senelium.element.Element;
 
 public class ProductsPage extends BasePage {
@@ -20,7 +20,7 @@ public class ProductsPage extends BasePage {
         locator.click();
     }
 
-    public boolean isPageTitleVisible() {
-        return Expect.toBeVisible(this.title);
+    public void isPageTitleVisible() {
+        SeAssert.expect(this.title).toBeVisible();
     }
 }

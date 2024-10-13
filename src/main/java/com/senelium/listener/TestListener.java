@@ -1,7 +1,5 @@
 package com.senelium.listener;
 
-import com.aventstack.extentreports.Status;
-import com.senelium.reports.ExtentTestReport;
 import io.qameta.allure.listener.TestLifecycleListener;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestContext;

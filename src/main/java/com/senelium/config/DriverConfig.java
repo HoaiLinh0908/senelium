@@ -23,11 +23,22 @@ public class DriverConfig {
         this.remoteURL = System.getProperty("remoteURL", "");
         this.headless = Boolean.parseBoolean(System.getProperty("headless", "false"));
         this.timeout = new Timeout();
-        this.timeout.setPageLoad(Integer.parseInt(System.getProperty("pageLoadTimeout", "60")));
-        this.timeout.setElementWait(Integer.parseInt(System.getProperty("elementWaitTimeout", "5")));
+        this.timeout.setPageLoad(Integer.parseInt(System.getProperty("pageLoadTimeout", "60000")));
+        this.timeout.setElementWait(Integer.parseInt(System.getProperty("elementWaitTimeout", "5000")));
         this.timeout.setInterval(Integer.parseInt(System.getProperty("interval", "500")));
         this.windowMaximize = Boolean.parseBoolean(System.getProperty("headless", "true"));
         this.binary = System.getProperty("binary", "");
+    }
+
+    public String toString() {
+        return "DriverConfig(" +
+                " browser=" + this.getBrowser() +
+                ", capabilities=" + this.getCapabilities() +
+                ", remoteURL=" + this.getRemoteURL() +
+                ", headless=" + this.isHeadless() +
+                ", timeout=" + this.getTimeout() +
+                ", windowMaximize=" + this.isWindowMaximize() +
+                ", binary=" + this.getBinary() + " )";
     }
 
     private static final class InstanceHolder {
