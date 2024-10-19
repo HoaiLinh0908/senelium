@@ -8,12 +8,9 @@ import lombok.Setter;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.asserts.IAssert;
-import org.testng.collections.Maps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 public class Assertion {
@@ -105,6 +102,24 @@ public class Assertion {
             return false;
         }
         return true;
+    }
+
+    public void imgToBeVisible() {
+        this.imgToBeVisible("", null);
+    }
+
+    public void imgToBeVisible(String message, Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.not(
+                    ExpectedConditions.domPropertyToBe(element.findVisibleElement(), "naturalWidth", "0")
+            ));
+        } catch (TimeoutException e) {
+            handleFailedCheck(
+                    "visible",
+                    "invisible or broken",
+                    message + "\nImage element [" + element.getLocator() + "] is expected to be visible but found invisible or broken. ",
+                    timeout);
+        }
     }
 
     private static <T> String composeMessage(T expected, T actual, String message) {

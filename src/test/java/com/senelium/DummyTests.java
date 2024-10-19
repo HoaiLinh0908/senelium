@@ -2,7 +2,7 @@ package com.senelium;
 
 import org.testng.annotations.Test;
 
-public class TestPractice {
+public class DummyTests {
 
     @Test
     void testMessage() {

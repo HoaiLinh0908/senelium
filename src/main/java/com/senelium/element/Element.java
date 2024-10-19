@@ -130,6 +130,15 @@ public class Element {
         }
     }
 
+    public boolean isExisted() {
+        try {
+            getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean isEnabled() {
         return findVisibleElement().isEnabled();
     }

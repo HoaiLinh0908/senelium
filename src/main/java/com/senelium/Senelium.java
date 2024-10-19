@@ -52,8 +52,15 @@ public class Senelium {
 
     public static void open(String url) {
         //support 'baseUrl'?
-        log.info("Navigate to {}", url);
+        log.info("Navigate to [{}]", url);
         getDriver().get(url);
+    }
+
+    public static void open(String url, String username, String password) {
+        String protocol = url.split(":")[0];
+        String authUrl = url.replaceFirst(protocol + "://", protocol + "://" + username + ":" + password + "@");
+        log.info("Navigate with basic authentication to [{}]", authUrl);
+        getDriver().get(authUrl);
     }
 
     public static void closeBrowser() {
@@ -98,7 +105,7 @@ public class Senelium {
         getDriver().manage().deleteAllCookies();
     }
 
-    public static Alert getAlert() {
+    public static Alert switchToAlert() {
         return getDriver().switchTo().alert();
     }
 
