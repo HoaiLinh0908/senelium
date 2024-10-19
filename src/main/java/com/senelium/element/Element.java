@@ -5,6 +5,7 @@ import com.senelium.constant.Expectation;
 import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.pagefactory.ByChained;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Getter
 public class Element {
     private final By locator;
+    private By parentLocator;
     private Map<Expectation, String> expectedConditionsMap;
 
     public Element(By locator) {
@@ -75,14 +77,9 @@ public class Element {
         return this.locator;
     }
 
-    //TODO: Improve this method to allow other mechanisms
-    public Element childByCssSelector(String cssSelector) {
-        String locatingMechanism = this.getLocator().toString().split("\\.")[1];
-        if (!"cssSelector".equals(locatingMechanism)) {
-            throw new RuntimeException("The locating of parent element should be CSS Selector");
-        }
-        String selector = (String) ((By.ByCssSelector) this.getLocator()).getRemoteParameters().value();
-        return Element.byCssSelector(selector + ">" + cssSelector);
+    public Element getChild(By childLocator) {
+        By fullChildLocator = new ByChained(this.locator, childLocator);
+        return Element.by(fullChildLocator);
     }
 
     public WebElement findElement() {
@@ -94,7 +91,7 @@ public class Element {
     }
 
     // Return an empty list instead of throwing TimeoutException
-    private List<WebElement> findElements() {
+    public List<WebElement> findElements() {
         try {
             return getWaiter().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
         } catch (TimeoutException e) {
@@ -104,7 +101,7 @@ public class Element {
 
     // The ExpectedConditions.visibilityOfAllElementsLocatedBy() will throw TimeoutException if there is any invisible element.
     // That is not what I expect. I expect a list of visible elements even there are some invisible elements on the DOM.
-    private List<WebElement> findVisibleElements() {
+    public List<WebElement> findVisibleElements() {
         List<WebElement> elements = findElements();
         List<WebElement> visibleElements = new ArrayList<>();
         for (WebElement element : elements) {

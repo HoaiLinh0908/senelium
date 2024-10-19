@@ -110,9 +110,12 @@ public class Assertion {
 
     public void imgToBeVisible(String message, Integer timeout) {
         try {
-            getWaiter(timeout).until(ExpectedConditions.not(
-                    ExpectedConditions.domPropertyToBe(element.findVisibleElement(), "naturalWidth", "0")
-            ));
+            getWaiter(timeout).until(
+                    ExpectedConditions.not(ExpectedConditions.domPropertyToBe(
+                            element.findVisibleElement(),
+                            "naturalWidth",
+                            "0"))
+            );
         } catch (TimeoutException e) {
             handleFailedCheck(
                     "visible",
