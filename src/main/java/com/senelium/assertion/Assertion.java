@@ -70,15 +70,15 @@ public class Assertion {
         }
     }
 
-    public boolean toBeInvisible() {
-        return toBeInvisible("");
+    public void toBeInvisible() {
+        toBeInvisible("");
     }
 
-    public boolean toBeInvisible(String message) {
-        return toBeInVisible(message, null);
+    public void toBeInvisible(String message) {
+        toBeInVisible(message, null);
     }
 
-    public boolean toBeInVisible(String message, Integer timeout) {
+    public void toBeInVisible(String message, Integer timeout) {
         try {
             getWaiter(timeout).until(ExpectedConditions.invisibilityOfElementLocated(element.getLocator()));
         } catch (TimeoutException e) {
@@ -88,20 +88,23 @@ public class Assertion {
                     message + "\nElement [" + element.getLocator() + "] is expected to be invisible but found visible. ",
                     timeout);
         }
-        return true;
     }
 
-    public boolean toHaveText(String expectedText) {
-        return toHaveText(expectedText, null);
+    public void toHaveText(String expectedText) {
+        toHaveText(expectedText, "", null);
     }
 
-    public boolean toHaveText(String expectedText, Integer timeout) {
+    public void toHaveText(String expectedText, String message, Integer timeout) {
         try {
+            //Get text already get the visible text
             getWaiter(timeout).until(ExpectedConditions.textToBe(element.getLocator(), expectedText));
         } catch (TimeoutException e) {
-            return false;
+            handleFailedCheck(
+                    expectedText,
+                    element.getText(true),
+                    message + "\nElement [" + element.getLocator() + "] is expected to be invisible but found visible. ",
+                    timeout);
         }
-        return true;
     }
 
     public void imgToBeVisible() {
@@ -121,6 +124,54 @@ public class Assertion {
                     "visible",
                     "invisible or broken",
                     message + "\nImage element [" + element.getLocator() + "] is expected to be visible but found invisible or broken. ",
+                    timeout);
+        }
+    }
+
+    public void toBeSelected() {
+        toBeSelected("", null);
+    }
+
+    public void toBeSelected(String message) {
+        toBeSelected(message, null);
+    }
+
+    public void toBeSelected(Integer timeout) {
+        toBeSelected("", timeout);
+    }
+
+    public void toBeSelected(String message, Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.elementToBeSelected(element.getLocator()));
+        } catch (TimeoutException e) {
+            handleFailedCheck(
+                    "selected",
+                    "unselected",
+                    message + "\nElement [" + element.getLocator() + "] is expected to be selected but found unselected. ",
+                    timeout);
+        }
+    }
+
+    public void toBeUnselected() {
+        toBeUnselected("", null);
+    }
+
+    public void toBeUnselected(String message) {
+        toBeUnselected(message, null);
+    }
+
+    public void toBeUnselected(Integer timeout) {
+        toBeUnselected("", timeout);
+    }
+
+    public void toBeUnselected(String message, Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.elementSelectionStateToBe(this.element.getLocator(), false));
+        } catch (TimeoutException e) {
+            handleFailedCheck(
+                    "unselected",
+                    "selected",
+                    message + "\nElement [" + element.getLocator() + "] is expected to be unselected but found selected. ",
                     timeout);
         }
     }

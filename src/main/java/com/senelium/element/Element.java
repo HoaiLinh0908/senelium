@@ -83,30 +83,46 @@ public class Element {
     }
 
     public WebElement findElement() {
-        return getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
+        return findElement(null);
+    }
+
+    public WebElement findElement(Integer timeout) {
+        return getWaiter(timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     public WebElement findVisibleElement() {
-        return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return findVisibleElement(null);
     }
 
-    // Return an empty list instead of throwing TimeoutException
+    public WebElement findVisibleElement(Integer timeout) {
+        return getWaiter(timeout).until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
     public List<WebElement> findElements() {
+        return findElements(null);
+    }
+
+    public List<WebElement> findElements(Integer timeout) {
         try {
-            return getWaiter().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+            return getWaiter(timeout).until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
         } catch (TimeoutException e) {
+            // Return an empty list instead of throwing TimeoutException
             return Collections.emptyList();
         }
     }
 
+    public List<WebElement> findVisibleElements() {
+        return findVisibleElements(null);
+    }
+
     // The ExpectedConditions.visibilityOfAllElementsLocatedBy() will throw TimeoutException if there is any invisible element.
     // That is not what I expect. I expect a list of visible elements even there are some invisible elements on the DOM.
-    public List<WebElement> findVisibleElements() {
-        List<WebElement> elements = findElements();
+    public List<WebElement> findVisibleElements(Integer timeout) {
+        List<WebElement> elements = findElements(timeout);
         List<WebElement> visibleElements = new ArrayList<>();
         for (WebElement element : elements) {
             try {
-                getWaiter().until(ExpectedConditions.visibilityOf(element));
+                getWaiter(timeout).until(ExpectedConditions.visibilityOf(element));
                 visibleElements.add(element);
             } catch (TimeoutException ignored) {
                 // Ignore invisible elements
@@ -116,20 +132,32 @@ public class Element {
     }
 
     public int countVisibleElements() {
-        return findVisibleElements().size();
+        return countVisibleElements(null);
+    }
+
+    public int countVisibleElements(Integer timeout) {
+        return findVisibleElements(timeout).size();
     }
 
     public boolean isDisplayed() {
+        return isDisplayed(null);
+    }
+
+    public boolean isDisplayed(Integer timeout) {
         try {
-            return findElement().isDisplayed();
+            return findVisibleElement(timeout).isDisplayed();
         } catch (TimeoutException e) {
             return false;
         }
     }
 
     public boolean isExisted() {
+        return isExisted(null);
+    }
+
+    public boolean isExisted(Integer timeout) {
         try {
-            getWaiter().until(ExpectedConditions.presenceOfElementLocated(locator));
+            getWaiter(timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
         } catch (TimeoutException e) {
             return false;
         }
@@ -137,16 +165,51 @@ public class Element {
     }
 
     public boolean isEnabled() {
-        return findVisibleElement().isEnabled();
+        return isEnabled(null);
+    }
+
+    public boolean isEnabled(Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.elementToBeClickable(this.locator));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isSelected() {
-        return findVisibleElement().isSelected();
+        return isSelected(null);
+    }
+
+    public boolean isSelected(Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.elementToBeSelected(this.locator));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isNotSelected() {
+        return isNotSelected(null);
+    }
+
+    public boolean isNotSelected(Integer timeout) {
+        try {
+            getWaiter(timeout).until(ExpectedConditions.elementSelectionStateToBe(this.locator, false));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
     }
 
     public void click() {
         // TODO: Handle animated elements
         getWaiter().until(ExpectedConditions.elementToBeClickable(this.locator)).click();
+    }
+
+    public void rightClick() {
+        //TODO
     }
 
     public void clickByJs() {
@@ -158,12 +221,18 @@ public class Element {
     }
 
     public void type(String keys) {
-        findVisibleElement().sendKeys(keys);
+        type(keys, false);
     }
 
-    public void clearThenType(String keys) {
-        this.clearText();
-        this.type(keys);
+    public void clearAndType(String keys) {
+        type(keys, true);
+    }
+
+    public void type(String keys, boolean clear) {
+        if (clear) {
+            this.clearText();
+        }
+        findVisibleElement().sendKeys(keys);
     }
 
     public void setValue(String value) {
@@ -280,35 +349,35 @@ public class Element {
     }
 
     public void waitForVisible() {
-        getWaiter().until(ExpectedConditions.visibilityOfElementLocated(locator));
+        this.waitForVisible(null);
     }
 
-    public void waitForVisible(int mil) {
-        getWaiter(mil).until(ExpectedConditions.visibilityOfElementLocated(locator));
+    public void waitForVisible(Integer mil) {
+        this.getWaiter(mil).until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public void waitForInvisible() {
-        getWaiter().until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        this.waitForInvisible(null);
     }
 
-    public void waitForInvisible(int mil) {
+    public void waitForInvisible(Integer mil) {
         getWaiter(mil).until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     public void waitUntilTextChanged(String expectText) {
-        getWaiter().until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
+        this.waitUntilTextChanged(expectText, null);
     }
 
-    public void waitUntilTextChanged(String expectText, int mil) {
+    public void waitUntilTextChanged(String expectText, Integer mil) {
         getWaiter(mil).until(ExpectedConditions.textToBePresentInElementLocated(locator, expectText));
     }
 
     private WebDriverWait getWaiter() {
-        return Senelium.getDefaultWaiter();
+        return this.getWaiter(null);
     }
 
-    private WebDriverWait getWaiter(int mil) {
-        return Senelium.getWaiter(mil);
+    private WebDriverWait getWaiter(Integer mil) {
+        return mil != null ? Senelium.getWaiter(mil) : Senelium.getDefaultWaiter();
     }
 
     private Actions getActions() {
